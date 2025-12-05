@@ -41,6 +41,21 @@ Isanutri is a comprehensive nutritional management platform for dietitians and n
 5. **PDF Export**: Export diet plans to PDF format
 6. **Dark Mode**: Full dark mode support
 
+## Design System
+The application uses a modern, professional design with:
+- **Primary Color**: Sage/Teal (#0D9488)
+- **Typography**: Plus Jakarta Sans / Inter
+- **Border Radius**: xl (12px), 2xl (16px), 3xl (24px)
+- **Shadows**: Soft shadows with color accents
+- **Animations**: Smooth transitions and micro-interactions
+
+### Key Design Patterns
+- Split-screen layouts for authentication pages
+- Gradient accent buttons with hover effects
+- Card-based UI with subtle borders and shadows
+- Skeleton loading states with shimmer animation
+- Responsive navigation with active state indicators
+
 ## Running the Application
 The application runs on port 5000 with:
 ```bash
@@ -53,11 +68,20 @@ The app uses Firebase for:
 - Firestore database for patient and diet storage
 - Cloud Storage for profile pictures
 
+**Important**: Configure Firestore Security Rules in Firebase Console to allow authenticated users to read/write their own data.
+
 ## Recent Changes
 - December 2024: Initial setup on Replit
 - Fixed AuthContext.tsx closing tag error
 - Configured Vite for Replit environment (port 5000, allowedHosts)
 - Created index.css for base styles
+- December 2024: Major UI/UX Redesign
+  - Redesigned Register page with split-screen layout
+  - Enhanced Sidebar with animations and micro-interactions
+  - Modernized Dashboard with improved stat cards and quick actions
+  - Updated Breadcrumbs with icons and sticky positioning
+  - Improved EmptyState and LoadingState components
+  - Added global CSS animations (fadeIn, scaleIn, shimmer)
 
 ## User Preferences
 - Language: Portuguese (Brazil)
