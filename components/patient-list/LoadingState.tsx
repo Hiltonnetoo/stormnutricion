@@ -1,13 +1,25 @@
 import React from 'react';
 
 const LoadingState = () => (
-    <div className="flex flex-col items-center justify-center py-20 text-center">
-        <svg className="animate-spin h-8 w-8 text-sage-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        <p className="mt-4 text-lg font-semibold text-gray-700 dark:text-gray-300">Carregando pacientes...</p>
-        <p className="text-sm text-gray-500 dark:text-gray-400">Só um momento, estamos buscando os dados.</p>
+    <div className="flex flex-col items-center justify-center py-16 text-center">
+        <div className="relative">
+            <div className="w-16 h-16 border-4 border-sage-100 rounded-full"></div>
+            <div className="absolute top-0 left-0 w-16 h-16 border-4 border-sage-500 rounded-full border-t-transparent animate-spin"></div>
+        </div>
+        <p className="mt-6 text-lg font-semibold text-slate-700">Carregando pacientes...</p>
+        <p className="text-sm text-slate-400 mt-1">So um momento, estamos buscando os dados.</p>
+        
+        <div className="mt-8 w-full max-w-md space-y-3">
+            {[1, 2, 3].map((i) => (
+                <div key={i} className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl animate-pulse">
+                    <div className="w-10 h-10 bg-slate-200 rounded-full"></div>
+                    <div className="flex-1 space-y-2">
+                        <div className="h-4 bg-slate-200 rounded w-3/4"></div>
+                        <div className="h-3 bg-slate-100 rounded w-1/2"></div>
+                    </div>
+                </div>
+            ))}
+        </div>
     </div>
 );
 
