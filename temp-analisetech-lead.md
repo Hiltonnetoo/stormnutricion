@@ -52,11 +52,11 @@ Demonstra que você sabe trabalhar sob o fluxo de engenharia de uma equipe real 
 
 ### 🟣 Passo 5: Polimento, Organização e README Sênior
 Eliminar o aspecto de "trabalho de faculdade" ou "rascunho".
-- [ ] **Ajuste 5.1: Remover placeholders e UI Fakes.**
+- [x] **Ajuste 5.1: Remover placeholders e UI Fakes.**
     *   *Justificativa*: Implementar gráficos interativos reais em SVG nas estatísticas mensais (Reports) e atualizar os widgets estáticos para mostrar dados baseados no ambiente.
-- [ ] **Ajuste 5.2: Limpeza da Raiz do Repositório.**
+- [x] **Ajuste 5.2: Limpeza da Raiz do Repositório.**
     *   *Justificativa*: Excluir arquivos temporários (`temp-melhorias.md`, `O que falta fazer.md`, `project-notes.md`, etc.) mantendo a raiz limpa e profissional.
-- [ ] **Ajuste 5.3: Reescrever o `README.md` em Inglês Acadêmico/Profissional.**
+- [x] **Ajuste 5.3: Reescrever o `README.md` em Inglês Acadêmico/Profissional.**
     *   *Justificativa*: O README deve focar em **decisões de engenharia e trade-offs** (ex: o uso de Firebase dinâmico, algoritmos manuais de dietas e gráficos SVG personalizados para performance) em vez de apenas manual de uso.
-- [ ] **Ajuste 5.4: Adotar Conventional Commits e PRs.**
+- [x] **Ajuste 5.4: Adotar Conventional Commits e PRs.**
     *   *Justificativa*: Seguir o fluxo de commits atômicos (`feat:`, `fix:`, `docs:`, `test:`) para demonstrar disciplina profissional na linha do tempo do Git.
