@@ -1,0 +1,68 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isNutritionist(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function getPatientProfile() {
+      return get(/databases/$(database)/documents/patientProfiles/$(request.auth.uid)).data;
+    }
+
+    function isAssociatedPatient(userId, patientId) {
+      return isAuthenticated() &&
+        exists(/databases/$(database)/documents/patientProfiles/$(request.auth.uid)) &&
+        getPatientProfile().nutritionistId == userId &&
+        getPatientProfile().patientId == patientId;
+    }
+
+    // Rules for patientProfiles collection
+    match /patientProfiles/{profileId} {
+      allow read: if isAuthenticated() && (request.auth.uid == profileId || resource.data.nutritionistId == request.auth.uid);
+      allow create: if isAuthenticated() && (request.auth.uid == profileId || request.resource.data.nutritionistId == request.auth.uid);
+      allow update, delete: if isAuthenticated() && (resource.data.nutritionistId == request.auth.uid);
+    }
+
+    // Rules for users collection and its subcollections
+    match /users/{userId} {
+      // Nutritionists own their userId document workspace (though the document itself might not exist)
+      allow read, write: if isNutritionist(userId);
+
+      match /patients/{patientId} {
+        // Nutritionist has full access
+        allow read, write: if isNutritionist(userId);
+        
+        // Associated patient can read and update their own patient record (for weight logging, self-evaluation, adherence)
+        allow read, update: if isAssociatedPatient(userId, patientId);
+      }
+
+      match /diets/{dietId} {
+        // Nutritionist has full access
+        allow read, write: if isNutritionist(userId);
+
+        // Associated patient can read their own diets
+        allow read: if isAuthenticated() &&
+          exists(/databases/$(database)/documents/patientProfiles/$(request.auth.uid)) &&
+          getPatientProfile().nutritionistId == userId &&
+          resource.data.patientId == getPatientProfile().patientId;
+      }
+
+      match /appointments/{apptId} {
+        // Nutritionist has full access
+        allow read, write: if isNutritionist(userId);
+
+        // Associated patient can read their own appointments
+        allow read: if isAuthenticated() &&
+          exists(/databases/$(database)/documents/patientProfiles/$(request.auth.uid)) &&
+          getPatientProfile().nutritionistId == userId &&
+          resource.data.patientId == getPatientProfile().patientId;
+      }
+    }
+  }
+}

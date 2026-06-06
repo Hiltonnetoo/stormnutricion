@@ -1,0 +1,17 @@
+{
+  "name": "Isanutri Professional",
+  "short_name": "Isanutri",
+  "description": "Sistema de gestão nutricional para nutricionistas e pacientes",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f0fdfa",
+  "theme_color": "#0d9488",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d9488'/><text y='.9em' font-size='80' x='10'>🥗</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}
