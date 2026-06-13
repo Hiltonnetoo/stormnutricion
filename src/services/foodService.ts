@@ -1,3 +1,4 @@
+import i18n from "../i18n";
 import { brazilianFoods } from "../data/foods";
 import type { Food, NovaGroup } from "../types";
 
@@ -5,26 +6,85 @@ import type { Food, NovaGroup } from "../types";
    Classificação NOVA (processamento) + Carga Glicêmica
    ========================================================================== */
 
-export const NOVA_LABELS: Record<NovaGroup, { short: string; full: string; tone: string }> = {
-  1: { short: "In natura", full: "In natura / minimamente processado", tone: "bg-emerald-50 text-emerald-700" },
-  2: { short: "Ingrediente culinário", full: "Ingrediente culinário processado", tone: "bg-sky-50 text-sky-700" },
-  3: { short: "Processado", full: "Alimento processado", tone: "bg-amber-50 text-amber-700" },
-  4: { short: "Ultraprocessado", full: "Ultraprocessado", tone: "bg-rose-50 text-rose-700" },
+export const NOVA_LABELS = {
+  get 1() {
+    return {
+      short: i18n.t("food.nova_labels.1_short"),
+      full: i18n.t("food.nova_labels.1_full"),
+      tone: "bg-emerald-50 text-emerald-700",
+    };
+  },
+  get 2() {
+    return {
+      short: i18n.t("food.nova_labels.2_short"),
+      full: i18n.t("food.nova_labels.2_full"),
+      tone: "bg-sky-50 text-sky-700",
+    };
+  },
+  get 3() {
+    return {
+      short: i18n.t("food.nova_labels.3_short"),
+      full: i18n.t("food.nova_labels.3_full"),
+      tone: "bg-amber-50 text-amber-700",
+    };
+  },
+  get 4() {
+    return {
+      short: i18n.t("food.nova_labels.4_short"),
+      full: i18n.t("food.nova_labels.4_full"),
+      tone: "bg-rose-50 text-rose-700",
+    };
+  },
+} as Record<NovaGroup, { short: string; full: string; tone: string }>;
+
+export const getFoodName = (food: Food): string => {
+  return i18n.language === "en" && food.nameEn ? food.nameEn : food.name;
+};
+
+export const getFoodCategoryName = (category: string): string => {
+  return i18n.t(`food.categories.${category}`, { defaultValue: category });
 };
 
 const ULTRAPROCESSED_HINTS = [
-  "refrigerante", "salgadinho", "biscoito recheado", "bolacha recheada", "nugget",
-  "empanado", "salsicha", "mortadela", "presunto", "linguiça", "bacon", "miojo",
-  "macarrão instantâneo", "margarina", "achocolatado", "gelatina", "sorvete",
-  "barra de cereal", "cereal matinal", "energético", "suco em pó", "ketchup",
-  "catchup", "maionese", "molho pronto", "tempero pronto", "embutido",
-  "hambúrguer", "leite condensado", "chocolate", "bombom", "bala", "chiclete",
+  "refrigerante",
+  "salgadinho",
+  "biscoito recheado",
+  "bolacha recheada",
+  "nugget",
+  "empanado",
+  "salsicha",
+  "mortadela",
+  "presunto",
+  "linguiça",
+  "bacon",
+  "miojo",
+  "macarrão instantâneo",
+  "margarina",
+  "achocolatado",
+  "gelatina",
+  "sorvete",
+  "barra de cereal",
+  "cereal matinal",
+  "energético",
+  "suco em pó",
+  "ketchup",
+  "catchup",
+  "maionese",
+  "molho pronto",
+  "tempero pronto",
+  "embutido",
+  "hambúrguer",
+  "leite condensado",
+  "chocolate",
+  "bombom",
+  "bala",
+  "chiclete",
 ];
 
 /**
- * Infere o grupo NOVA de um alimento a partir do campo explícito `novaGroup`
- * ou, na ausência dele, por heurística de categoria + nome. Usado tanto na
- * tela de Alimentos quanto pelo gerador (que exclui NOVA 4).
+ * Infers the NOVA group of a food from the explicit `novaGroup` field
+ * or, in its absence, by a category + name heuristic. Used both in
+ * the Foods screen and by the generator (which excludes NOVA 4).
  */
 export const getNovaGroup = (food: Food): NovaGroup => {
   if (food.novaGroup) return food.novaGroup;
@@ -35,23 +95,40 @@ export const getNovaGroup = (food: Food): NovaGroup => {
     case "Industrializados":
       return 4;
     case "Açúcares e Doces":
-      return n.includes("açúcar") || n.includes("mel") || n.includes("rapadura") ? 2 : 4;
+      return n.includes("açúcar") || n.includes("mel") || n.includes("rapadura")
+        ? 2
+        : 4;
     case "Bebidas":
-      if (n.includes("água") || n.includes("café") || n.includes("chá") || n.includes("suco natural") || n.includes("suco de"))
+      if (
+        n.includes("água") ||
+        n.includes("café") ||
+        n.includes("chá") ||
+        n.includes("suco natural") ||
+        n.includes("suco de")
+      )
         return 1;
-      if (n.includes("refrigerante") || n.includes("energético") || n.includes("isotônico"))
+      if (
+        n.includes("refrigerante") ||
+        n.includes("energético") ||
+        n.includes("isotônico")
+      )
         return 4;
       return 3;
     case "Óleos e Gorduras":
       if (n.includes("manteiga")) return 3;
-      return 2; // óleo, azeite, banha
+      return 2; // oil, olive oil, lard
     case "Leite e Derivados":
       if (n.includes("leite") && !n.includes("condensado")) return 1;
-      return 3; // queijo, iogurte, requeijão
+      return 3; // cheese, yogurt, creamy cheese
     case "Cereais e Derivados":
-      if (n.includes("pão") || n.includes("biscoito") || n.includes("bolacha") || n.includes("torrada"))
+      if (
+        n.includes("pão") ||
+        n.includes("biscoito") ||
+        n.includes("bolacha") ||
+        n.includes("torrada")
+      )
         return 3;
-      return 1; // arroz, aveia, fubá, milho
+      return 1; // rice, oats, cornmeal, corn
     case "Preparações":
       return 3;
     case "Carnes e Derivados":
@@ -64,11 +141,11 @@ export const getNovaGroup = (food: Food): NovaGroup => {
   }
 };
 
-/** Carboidrato disponível (total − fibra), base da carga glicêmica. */
+/** Available carbohydrate (total - fiber), basis of glycemic load. */
 export const getAvailableCarbs = (food: Food): number =>
   Math.max(0, food.carbs - (food.fiber || 0));
 
-/** Carga Glicêmica da porção listada = IG × carbo disponível ÷ 100. */
+/** Glycemic Load of the listed portion = GI * available carb / 100. */
 export const glycemicLoad = (food: Food): number | undefined => {
   if (food.glycemicIndex == null) return undefined;
   return Math.round((food.glycemicIndex * getAvailableCarbs(food)) / 100);
@@ -96,11 +173,17 @@ export const GLYCEMIC_TONE: Record<GlycemicLevel, string> = {
   high: "bg-rose-50 text-rose-700",
 };
 
-export const GLYCEMIC_LABEL: Record<GlycemicLevel, string> = {
-  low: "baixa",
-  medium: "média",
-  high: "alta",
-};
+export const GLYCEMIC_LABEL = {
+  get low() {
+    return i18n.t("food.glycemic_label.low");
+  },
+  get medium() {
+    return i18n.t("food.glycemic_label.medium");
+  },
+  get high() {
+    return i18n.t("food.glycemic_label.high");
+  },
+} as Record<GlycemicLevel, string>;
 
 export const foodCategories = [
   "Cereais e Derivados",
@@ -134,8 +217,10 @@ export const getFoodsByCategory = (category: string): Food[] => {
 export const searchFoods = (query: string): Food[] => {
   if (!query) return [];
   const lowercasedQuery = query.toLowerCase();
-  return brazilianFoods.filter((food) =>
-    food.name.toLowerCase().includes(lowercasedQuery),
+  return brazilianFoods.filter(
+    (food) =>
+      food.name.toLowerCase().includes(lowercasedQuery) ||
+      (food.nameEn && food.nameEn.toLowerCase().includes(lowercasedQuery)),
   );
 };
 

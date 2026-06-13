@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { UsersIcon, UtensilsIcon, CheckCircleIcon, BarChart3Icon } from "../components/icons";
+import { useTranslation } from "react-i18next";
+import {
+  UsersIcon,
+  UtensilsIcon,
+  CheckCircleIcon,
+  BarChart3Icon,
+} from "../components/icons";
 import { useAuth } from "../contexts/AuthContext";
 import {
   getPatientsCount,
@@ -30,7 +36,9 @@ const StatCard: React.FC<{
       {loading ? (
         <Skeleton className="h-9 w-24" />
       ) : (
-        <p className="text-3xl font-extrabold text-slate-900 dark:text-white stat-number">{value}</p>
+        <p className="text-3xl font-extrabold text-slate-900 dark:text-white stat-number">
+          {value}
+        </p>
       )}
       {loading ? (
         <Skeleton className="h-4 w-32 mt-2" />
@@ -41,28 +49,45 @@ const StatCard: React.FC<{
   </Card>
 );
 
-const StatusWidget: React.FC<{ title: string; status: string; type?: "success" | "warning" | "danger" }> = ({
-  title,
-  status,
-  type = "success",
-}) => {
-  const dotColor = type === "success" ? "bg-emerald-500" : type === "warning" ? "bg-amber-500" : "bg-rose-500";
-  const pingColor = type === "success" ? "bg-emerald-400" : type === "warning" ? "bg-amber-400" : "bg-rose-400";
+const StatusWidget: React.FC<{
+  title: string;
+  status: string;
+  type?: "success" | "warning" | "danger";
+}> = ({ title, status, type = "success" }) => {
+  const dotColor =
+    type === "success"
+      ? "bg-emerald-500"
+      : type === "warning"
+        ? "bg-amber-500"
+        : "bg-rose-500";
+  const pingColor =
+    type === "success"
+      ? "bg-emerald-400"
+      : type === "warning"
+        ? "bg-amber-400"
+        : "bg-rose-400";
   return (
     <Card className="p-4 flex items-center justify-between">
       <div>
         <p className="text-sm font-medium text-slate-500">{title}</p>
-        <p className="text-lg font-bold text-slate-800 dark:text-white">{status}</p>
+        <p className="text-lg font-bold text-slate-800 dark:text-white">
+          {status}
+        </p>
       </div>
       <span className="relative flex h-3 w-3">
-        <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${pingColor} opacity-75`} />
-        <span className={`relative inline-flex rounded-full h-3 w-3 ${dotColor}`} />
+        <span
+          className={`animate-ping absolute inline-flex h-full w-full rounded-full ${pingColor} opacity-75`}
+        />
+        <span
+          className={`relative inline-flex rounded-full h-3 w-3 ${dotColor}`}
+        />
       </span>
     </Card>
   );
 };
 
 const Reports: React.FC = () => {
+  const { t, i18n } = useTranslation();
   const { currentUser } = useAuth();
   const [stats, setStats] = useState({
     totalPatients: 0,
@@ -83,29 +108,43 @@ const Reports: React.FC = () => {
     const handleOffline = () => setIsOnline(false);
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
-    
+
     // Calculate page load timing
-    const [entry] = performance.getEntriesByType("navigation") as PerformanceNavigationTiming[];
+    const [entry] = performance.getEntriesByType(
+      "navigation",
+    ) as PerformanceNavigationTiming[];
     if (entry) {
-      setSystemLoadTime(`${entry.domContentLoadedEventEnd.toFixed(0)} ms (Rápido)`);
+      setSystemLoadTime(
+        `${entry.domContentLoadedEventEnd.toFixed(0)} ms (${t("reports.fast")})`,
+      );
     } else {
-      setSystemLoadTime("80 ms (Rápido)");
+      setSystemLoadTime(`80 ms (${t("reports.fast")})`);
     }
 
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     if (!currentUser) return;
     const unsubscribers = [
-      getPatientsCount(currentUser.uid, (count) => setStats((s) => ({ ...s, totalPatients: count }))),
-      getActivePatientsCount(currentUser.uid, (count) => setStats((s) => ({ ...s, activePatients: count }))),
-      getNewPatientsThisMonthCount(currentUser.uid, (count) => setStats((s) => ({ ...s, newPatientsThisMonth: count }))),
-      getDietsCount(currentUser.uid, (count) => setStats((s) => ({ ...s, totalDiets: count }))),
-      getDietsThisMonthCount(currentUser.uid, (count) => setStats((s) => ({ ...s, newDietsThisMonth: count }))),
+      getPatientsCount(currentUser.uid, (count) =>
+        setStats((s) => ({ ...s, totalPatients: count })),
+      ),
+      getActivePatientsCount(currentUser.uid, (count) =>
+        setStats((s) => ({ ...s, activePatients: count })),
+      ),
+      getNewPatientsThisMonthCount(currentUser.uid, (count) =>
+        setStats((s) => ({ ...s, newPatientsThisMonth: count })),
+      ),
+      getDietsCount(currentUser.uid, (count) =>
+        setStats((s) => ({ ...s, totalDiets: count })),
+      ),
+      getDietsThisMonthCount(currentUser.uid, (count) =>
+        setStats((s) => ({ ...s, newDietsThisMonth: count })),
+      ),
       getPatients(currentUser.uid, (list) => setPatientsList(list)),
     ];
     const timer = setTimeout(() => setLoading(false), 750);
@@ -116,16 +155,21 @@ const Reports: React.FC = () => {
   }, [currentUser]);
 
   const successRate =
-    stats.totalPatients > 0 ? ((stats.activePatients / stats.totalPatients) * 100).toFixed(1) : "0.0";
+    stats.totalPatients > 0
+      ? ((stats.activePatients / stats.totalPatients) * 100).toFixed(1)
+      : "0.0";
 
   const getLast6MonthsData = () => {
     const monthsData: { key: string; label: string; count: number }[] = [];
     const now = new Date();
-    
+
     // Initialize last 6 months
     for (let i = 5; i >= 0; i--) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const monthName = d.toLocaleDateString("pt-BR", { month: "short" });
+      const monthName = d.toLocaleDateString(
+        i18n.language === "pt" ? "pt-BR" : "en-US",
+        { month: "short" },
+      );
       monthsData.push({
         key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`,
         label: monthName.charAt(0).toUpperCase() + monthName.slice(1),
@@ -139,7 +183,7 @@ const Reports: React.FC = () => {
       const pDate = new Date(patient.createdAt);
       if (isNaN(pDate.getTime())) return;
       const yearMonth = `${pDate.getFullYear()}-${String(pDate.getMonth() + 1).padStart(2, "0")}`;
-      
+
       const match = monthsData.find((m) => m.key === yearMonth);
       if (match) {
         match.count += 1;
@@ -160,21 +204,31 @@ const Reports: React.FC = () => {
     const chartHeight = height - paddingBottom;
 
     const barWidth = 40;
-    const gap = (chartWidth - chartData.length * barWidth) / (chartData.length + 1);
+    const gap =
+      (chartWidth - chartData.length * barWidth) / (chartData.length + 1);
 
     return (
       <Card className="mt-8 p-6">
-        <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-1">Estatísticas Mensais</h2>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">Novos pacientes cadastrados nos últimos 6 meses</p>
-        
+        <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
+          {t("reports.monthly_stats")}
+        </h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">
+          {t("reports.stats_desc")}
+        </p>
+
         {patientsList.length === 0 && !loading ? (
           <div className="h-48 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-800/30 rounded-xl border border-slate-100 dark:border-slate-800">
             <BarChart3Icon className="w-8 h-8 text-slate-300 dark:text-slate-700 mb-2" />
-            <p className="text-sm text-slate-400">Nenhum paciente cadastrado para exibir estatísticas.</p>
+            <p className="text-sm text-slate-400">
+              {t("reports.no_patients_data")}
+            </p>
           </div>
         ) : (
           <div className="relative w-full overflow-x-auto">
-            <svg viewBox={`0 0 ${width} ${height}`} className="w-full min-w-[400px] h-full overflow-visible">
+            <svg
+              viewBox={`0 0 ${width} ${height}`}
+              className="w-full min-w-[400px] h-full overflow-visible"
+            >
               {/* Gridlines & Y axis labels */}
               {[0, 0.25, 0.5, 0.75, 1].map((ratio, index) => {
                 const yVal = chartHeight - ratio * (chartHeight - 10);
@@ -205,7 +259,8 @@ const Reports: React.FC = () => {
 
               {/* Bars */}
               {chartData.map((d, i) => {
-                const barHeight = d.count > 0 ? (d.count / maxCount) * (chartHeight - 10) : 0;
+                const barHeight =
+                  d.count > 0 ? (d.count / maxCount) * (chartHeight - 10) : 0;
                 const x = paddingLeft + gap + i * (barWidth + gap);
                 const y = chartHeight - barHeight;
 
@@ -220,7 +275,7 @@ const Reports: React.FC = () => {
                       fill="url(#barGradient)"
                       className="transition-all duration-300 hover:brightness-105 cursor-pointer"
                     />
-                    
+
                     <text
                       x={x + barWidth / 2}
                       y={y - 6}
@@ -259,32 +314,64 @@ const Reports: React.FC = () => {
     <div className="p-5 sm:p-6 lg:p-8 max-w-7xl mx-auto animate-fade-in">
       <PageHeader
         icon={<BarChart3Icon className="w-6 h-6" />}
-        title="Relatórios"
-        subtitle="Indicadores e desempenho da sua clínica."
+        title={t("reports.title")}
+        subtitle={t("reports.subtitle")}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <StatCard title="Total de Pacientes" value={stats.totalPatients.toLocaleString()} icon={<UsersIcon className="w-5 h-5" />} change={`+${stats.newPatientsThisMonth} este mês`} loading={loading} tone={{ bg: "bg-sky-50", text: "text-sky-600" }} />
-        <StatCard title="Dietas Criadas" value={stats.totalDiets.toLocaleString()} icon={<UtensilsIcon className="w-5 h-5" />} change={`+${stats.newDietsThisMonth} este mês`} loading={loading} tone={{ bg: "bg-sage-50", text: "text-sage-600" }} />
-        <StatCard title="Taxa de Pacientes Ativos" value={`${successRate}%`} icon={<CheckCircleIcon className="w-5 h-5" />} change={`${stats.activePatients} de ${stats.totalPatients} estão ativos`} loading={loading} tone={{ bg: "bg-emerald-50", text: "text-emerald-600" }} />
+        <StatCard
+          title={t("reports.total_patients")}
+          value={stats.totalPatients.toLocaleString()}
+          icon={<UsersIcon className="w-5 h-5" />}
+          change={t("reports.this_month", {
+            count: stats.newPatientsThisMonth,
+          })}
+          loading={loading}
+          tone={{ bg: "bg-sky-50", text: "text-sky-600" }}
+        />
+        <StatCard
+          title={t("reports.diets_created")}
+          value={stats.totalDiets.toLocaleString()}
+          icon={<UtensilsIcon className="w-5 h-5" />}
+          change={t("reports.this_month", { count: stats.newDietsThisMonth })}
+          loading={loading}
+          tone={{ bg: "bg-sage-50", text: "text-sage-600" }}
+        />
+        <StatCard
+          title={t("reports.active_rate")}
+          value={`${successRate}%`}
+          icon={<CheckCircleIcon className="w-5 h-5" />}
+          change={t("reports.active_ratio", {
+            active: stats.activePatients,
+            total: stats.totalPatients,
+          })}
+          loading={loading}
+          tone={{ bg: "bg-emerald-50", text: "text-emerald-600" }}
+        />
       </div>
 
       <div className="mt-8">
-        <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Monitoramento de Performance</h2>
+        <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
+          {t("reports.performance_monitoring")}
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <StatusWidget
-            title="Conectividade de Rede"
-            status={isOnline ? "Online (Conectado)" : "Offline (Sem rede)"}
+            title={t("reports.network_connectivity")}
+            status={isOnline ? t("reports.online") : t("reports.offline")}
             type={isOnline ? "success" : "danger"}
           />
           <StatusWidget
-            title="Tempo de Resposta da Página"
+            title={t("reports.response_time")}
             status={systemLoadTime}
             type="success"
           />
           <StatusWidget
-            title="Diagnóstico de E-mail"
-            status={isEmailConfigured() ? "Configurado (EmailJS)" : "Não configurado"}
+            title={t("reports.email_diagnostic")}
+            status={
+              isEmailConfigured()
+                ? t("reports.configured")
+                : t("reports.not_configured")
+            }
             type={isEmailConfigured() ? "success" : "warning"}
           />
         </div>

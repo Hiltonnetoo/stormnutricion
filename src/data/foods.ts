@@ -6,6 +6,7 @@ const coreFoods: Food[] = [
   {
     id: "1",
     name: "Arroz branco, cozido",
+    nameEn: "Cooked white rice",
     category: "Cereais e Derivados",
     portion: "100",
     unit: "g",
@@ -21,6 +22,7 @@ const coreFoods: Food[] = [
   {
     id: "2",
     name: "Pão francês",
+    nameEn: "French bread",
     category: "Cereais e Derivados",
     portion: "50",
     unit: "g",
@@ -36,6 +38,7 @@ const coreFoods: Food[] = [
   {
     id: "3",
     name: "Macarrão, cozido",
+    nameEn: "Cooked pasta",
     category: "Cereais e Derivados",
     portion: "140",
     unit: "g",
@@ -51,6 +54,7 @@ const coreFoods: Food[] = [
   {
     id: "4",
     name: "Aveia em flocos",
+    nameEn: "Rolled oats",
     category: "Cereais e Derivados",
     portion: "40",
     unit: "g",
@@ -66,6 +70,7 @@ const coreFoods: Food[] = [
   {
     id: "5",
     name: "Milho verde, cozido",
+    nameEn: "Cooked sweet corn",
     category: "Cereais e Derivados",
     portion: "100",
     unit: "g",
@@ -80,6 +85,7 @@ const coreFoods: Food[] = [
   {
     id: "6",
     name: "Pão de forma integral",
+    nameEn: "Whole wheat sliced bread",
     category: "Cereais e Derivados",
     portion: "50",
     unit: "g (2 fatias)",
@@ -95,6 +101,7 @@ const coreFoods: Food[] = [
   {
     id: "7",
     name: "Tapioca (goma hidratada)",
+    nameEn: "Tapioca (hydrated gum)",
     category: "Cereais e Derivados",
     portion: "100",
     unit: "g",
@@ -109,6 +116,7 @@ const coreFoods: Food[] = [
   {
     id: "8",
     name: "Cuscuz de milho, cozido",
+    nameEn: "Cooked corn couscous",
     category: "Cereais e Derivados",
     portion: "100",
     unit: "g",
@@ -123,6 +131,7 @@ const coreFoods: Food[] = [
   {
     id: "9",
     name: "Quinoa, cozida",
+    nameEn: "Cooked quinoa",
     category: "Cereais e Derivados",
     portion: "185",
     unit: "g",
@@ -138,6 +147,7 @@ const coreFoods: Food[] = [
   {
     id: "10",
     name: "Biscoito cream cracker",
+    nameEn: "Cream cracker biscuit",
     category: "Cereais e Derivados",
     portion: "30",
     unit: "g (5 unidades)",
@@ -154,6 +164,7 @@ const coreFoods: Food[] = [
   {
     id: "11",
     name: "Alface",
+    nameEn: "Lettuce",
     category: "Verduras e Legumes",
     portion: "100",
     unit: "g",
@@ -167,6 +178,7 @@ const coreFoods: Food[] = [
   {
     id: "12",
     name: "Tomate",
+    nameEn: "Tomato",
     category: "Verduras e Legumes",
     portion: "100",
     unit: "g",
@@ -180,6 +192,7 @@ const coreFoods: Food[] = [
   {
     id: "13",
     name: "Cenoura, cozida",
+    nameEn: "Cooked carrot",
     category: "Verduras e Legumes",
     portion: "100",
     unit: "g",
@@ -193,6 +206,7 @@ const coreFoods: Food[] = [
   {
     id: "14",
     name: "Brócolis, cozido",
+    nameEn: "Cooked broccoli",
     category: "Verduras e Legumes",
     portion: "100",
     unit: "g",
@@ -206,6 +220,7 @@ const coreFoods: Food[] = [
   {
     id: "15",
     name: "Batata doce, cozida",
+    nameEn: "Cooked sweet potato",
     category: "Verduras e Legumes",
     portion: "100",
     unit: "g",
@@ -219,6 +234,7 @@ const coreFoods: Food[] = [
   {
     id: "16",
     name: "Abobrinha, cozida",
+    nameEn: "Cooked zucchini",
     category: "Verduras e Legumes",
     portion: "100",
     unit: "g",
@@ -232,6 +248,7 @@ const coreFoods: Food[] = [
   {
     id: "17",
     name: "Couve refogada",
+    nameEn: "Sauteed collard greens",
     category: "Verduras e Legumes",
     portion: "100",
     unit: "g",
@@ -245,6 +262,7 @@ const coreFoods: Food[] = [
   {
     id: "18",
     name: "Espinafre, cozido",
+    nameEn: "Cooked spinach",
     category: "Verduras e Legumes",
     portion: "100",
     unit: "g",
@@ -258,6 +276,7 @@ const coreFoods: Food[] = [
   {
     id: "19",
     name: "Pimentão",
+    nameEn: "Bell pepper",
     category: "Verduras e Legumes",
     portion: "100",
     unit: "g",
@@ -271,6 +290,7 @@ const coreFoods: Food[] = [
   {
     id: "20",
     name: "Beterraba, cozida",
+    nameEn: "Cooked beet",
     category: "Verduras e Legumes",
     portion: "100",
     unit: "g",
@@ -286,6 +306,7 @@ const coreFoods: Food[] = [
   {
     id: "21",
     name: "Banana prata",
+    nameEn: "Silver banana",
     category: "Frutas",
     portion: "100",
     unit: "g",
@@ -299,6 +320,7 @@ const coreFoods: Food[] = [
   {
     id: "22",
     name: "Maçã",
+    nameEn: "Apple",
     category: "Frutas",
     portion: "100",
     unit: "g",
@@ -312,6 +334,7 @@ const coreFoods: Food[] = [
   {
     id: "23",
     name: "Laranja",
+    nameEn: "Orange",
     category: "Frutas",
     portion: "100",
     unit: "g",
@@ -325,6 +348,7 @@ const coreFoods: Food[] = [
   {
     id: "24",
     name: "Mamão formosa",
+    nameEn: "Formosa papaya",
     category: "Frutas",
     portion: "100",
     unit: "g",
@@ -338,6 +362,7 @@ const coreFoods: Food[] = [
   {
     id: "25",
     name: "Manga",
+    nameEn: "Mango",
     category: "Frutas",
     portion: "100",
     unit: "g",
@@ -351,6 +376,7 @@ const coreFoods: Food[] = [
   {
     id: "26",
     name: "Açaí (polpa congelada)",
+    nameEn: "Frozen acai pulp",
     category: "Frutas",
     portion: "100",
     unit: "g",
@@ -364,6 +390,7 @@ const coreFoods: Food[] = [
   {
     id: "27",
     name: "Abacate",
+    nameEn: "Avocado",
     category: "Frutas",
     portion: "100",
     unit: "g",
@@ -377,6 +404,7 @@ const coreFoods: Food[] = [
   {
     id: "28",
     name: "Uva",
+    nameEn: "Grape",
     category: "Frutas",
     portion: "100",
     unit: "g",
@@ -390,6 +418,7 @@ const coreFoods: Food[] = [
   {
     id: "29",
     name: "Melancia",
+    nameEn: "Watermelon",
     category: "Frutas",
     portion: "100",
     unit: "g",
@@ -403,6 +432,7 @@ const coreFoods: Food[] = [
   {
     id: "30",
     name: "Morango",
+    nameEn: "Strawberry",
     category: "Frutas",
     portion: "100",
     unit: "g",
@@ -418,6 +448,7 @@ const coreFoods: Food[] = [
   {
     id: "31",
     name: "Peito de frango, grelhado",
+    nameEn: "Grilled chicken breast",
     category: "Carnes e Derivados",
     portion: "100",
     unit: "g",
@@ -431,6 +462,7 @@ const coreFoods: Food[] = [
   {
     id: "32",
     name: "Bife de alcatra, grelhado",
+    nameEn: "Grilled sirloin steak",
     category: "Carnes e Derivados",
     portion: "100",
     unit: "g",
@@ -444,6 +476,7 @@ const coreFoods: Food[] = [
   {
     id: "33",
     name: "Ovo, cozido",
+    nameEn: "Cooked egg",
     category: "Carnes e Derivados",
     portion: "50",
     unit: "g (1 unidade)",
@@ -457,6 +490,7 @@ const coreFoods: Food[] = [
   {
     id: "34",
     name: "Salmão, assado",
+    nameEn: "Baked salmon",
     category: "Carnes e Derivados",
     portion: "100",
     unit: "g",
@@ -470,6 +504,7 @@ const coreFoods: Food[] = [
   {
     id: "35",
     name: "Patinho moído, cozido",
+    nameEn: "Cooked ground beef",
     category: "Carnes e Derivados",
     portion: "100",
     unit: "g",
@@ -483,6 +518,7 @@ const coreFoods: Food[] = [
   {
     id: "36",
     name: "Tilápia, assada",
+    nameEn: "Baked tilapia",
     category: "Carnes e Derivados",
     portion: "100",
     unit: "g",
@@ -496,6 +532,7 @@ const coreFoods: Food[] = [
   {
     id: "37",
     name: "Linguiça toscana, frita",
+    nameEn: "Fried Tuscan sausage",
     category: "Carnes e Derivados",
     portion: "100",
     unit: "g",
@@ -509,6 +546,7 @@ const coreFoods: Food[] = [
   {
     id: "38",
     name: "Atum em lata (em óleo)",
+    nameEn: "Canned tuna (in oil)",
     category: "Carnes e Derivados",
     portion: "85",
     unit: "g",
@@ -522,6 +560,7 @@ const coreFoods: Food[] = [
   {
     id: "39",
     name: "Lombo de porco, assado",
+    nameEn: "Baked pork loin",
     category: "Carnes e Derivados",
     portion: "100",
     unit: "g",
@@ -535,6 +574,7 @@ const coreFoods: Food[] = [
   {
     id: "40",
     name: "Peito de peru defumado",
+    nameEn: "Smoked turkey breast",
     category: "Carnes e Derivados",
     portion: "50",
     unit: "g (2 fatias)",
@@ -550,6 +590,7 @@ const coreFoods: Food[] = [
   {
     id: "41",
     name: "Leite integral",
+    nameEn: "Whole milk",
     category: "Leite e Derivados",
     portion: "200",
     unit: "ml",
@@ -563,6 +604,7 @@ const coreFoods: Food[] = [
   {
     id: "42",
     name: "Queijo minas frescal",
+    nameEn: "Minas fresh cheese",
     category: "Leite e Derivados",
     portion: "30",
     unit: "g",
@@ -576,6 +618,7 @@ const coreFoods: Food[] = [
   {
     id: "43",
     name: "Iogurte natural integral",
+    nameEn: "Whole natural yogurt",
     category: "Leite e Derivados",
     portion: "170",
     unit: "g",
@@ -589,6 +632,7 @@ const coreFoods: Food[] = [
   {
     id: "44",
     name: "Queijo muçarela",
+    nameEn: "Mozzarella cheese",
     category: "Leite e Derivados",
     portion: "30",
     unit: "g",
@@ -602,6 +646,7 @@ const coreFoods: Food[] = [
   {
     id: "45",
     name: "Requeijão cremoso",
+    nameEn: "Creamy requeijao cheese",
     category: "Leite e Derivados",
     portion: "30",
     unit: "g (1 colher de sopa)",
@@ -615,6 +660,7 @@ const coreFoods: Food[] = [
   {
     id: "46",
     name: "Leite desnatado",
+    nameEn: "Skimmed milk",
     category: "Leite e Derivados",
     portion: "200",
     unit: "ml",
@@ -628,6 +674,7 @@ const coreFoods: Food[] = [
   {
     id: "47",
     name: "Queijo cottage",
+    nameEn: "Cottage cheese",
     category: "Leite e Derivados",
     portion: "100",
     unit: "g",
@@ -641,6 +688,7 @@ const coreFoods: Food[] = [
   {
     id: "48",
     name: "Iogurte Grego",
+    nameEn: "Greek yogurt",
     category: "Leite e Derivados",
     portion: "100",
     unit: "g",
@@ -654,6 +702,7 @@ const coreFoods: Food[] = [
   {
     id: "49",
     name: "Queijo parmesão ralado",
+    nameEn: "Grated parmesan cheese",
     category: "Leite e Derivados",
     portion: "10",
     unit: "g (1 colher de sopa)",
@@ -667,6 +716,7 @@ const coreFoods: Food[] = [
   {
     id: "50",
     name: "Creme de leite",
+    nameEn: "Heavy cream",
     category: "Leite e Derivados",
     portion: "15",
     unit: "g (1 colher de sopa)",
@@ -682,6 +732,7 @@ const coreFoods: Food[] = [
   {
     id: "51",
     name: "Feijão carioca, cozido",
+    nameEn: "Cooked carioca beans",
     category: "Leguminosas",
     portion: "100",
     unit: "g",
@@ -695,6 +746,7 @@ const coreFoods: Food[] = [
   {
     id: "52",
     name: "Lentilha, cozida",
+    nameEn: "Cooked lentil",
     category: "Leguminosas",
     portion: "100",
     unit: "g",
@@ -708,6 +760,7 @@ const coreFoods: Food[] = [
   {
     id: "53",
     name: "Grão-de-bico, cozido",
+    nameEn: "Cooked chickpea",
     category: "Leguminosas",
     portion: "100",
     unit: "g",
@@ -721,6 +774,7 @@ const coreFoods: Food[] = [
   {
     id: "54",
     name: "Soja, cozida",
+    nameEn: "Cooked soy",
     category: "Leguminosas",
     portion: "100",
     unit: "g",
@@ -734,6 +788,7 @@ const coreFoods: Food[] = [
   {
     id: "55",
     name: "Ervilha, enlatada",
+    nameEn: "Canned pea",
     category: "Leguminosas",
     portion: "100",
     unit: "g",
@@ -749,6 +804,7 @@ const coreFoods: Food[] = [
   {
     id: "56",
     name: "Castanha-do-pará",
+    nameEn: "Brazil nut",
     category: "Oleaginosas",
     portion: "15",
     unit: "g (3 unidades)",
@@ -762,6 +818,7 @@ const coreFoods: Food[] = [
   {
     id: "57",
     name: "Amendoim, torrado",
+    nameEn: "Roasted peanut",
     category: "Oleaginosas",
     portion: "30",
     unit: "g",
@@ -775,6 +832,7 @@ const coreFoods: Food[] = [
   {
     id: "58",
     name: "Castanha de caju, torrada",
+    nameEn: "Roasted cashew nut",
     category: "Oleaginosas",
     portion: "30",
     unit: "g",
@@ -788,6 +846,7 @@ const coreFoods: Food[] = [
   {
     id: "59",
     name: "Nozes",
+    nameEn: "Walnuts",
     category: "Oleaginosas",
     portion: "30",
     unit: "g",
@@ -801,6 +860,7 @@ const coreFoods: Food[] = [
   {
     id: "60",
     name: "Amêndoas",
+    nameEn: "Almonds",
     category: "Oleaginosas",
     portion: "30",
     unit: "g",
@@ -816,6 +876,7 @@ const coreFoods: Food[] = [
   {
     id: "61",
     name: "Azeite de oliva extra virgem",
+    nameEn: "Extra virgin olive oil",
     category: "Óleos e Gorduras",
     portion: "15",
     unit: "ml (1 colher de sopa)",
@@ -829,6 +890,7 @@ const coreFoods: Food[] = [
   {
     id: "62",
     name: "Manteiga com sal",
+    nameEn: "Salted butter",
     category: "Óleos e Gorduras",
     portion: "10",
     unit: "g",
@@ -842,6 +904,7 @@ const coreFoods: Food[] = [
   {
     id: "63",
     name: "Óleo de soja",
+    nameEn: "Soy oil",
     category: "Óleos e Gorduras",
     portion: "15",
     unit: "ml (1 colher de sopa)",
@@ -855,6 +918,7 @@ const coreFoods: Food[] = [
   {
     id: "64",
     name: "Margarina",
+    nameEn: "Margarine",
     category: "Óleos e Gorduras",
     portion: "10",
     unit: "g",
@@ -868,6 +932,7 @@ const coreFoods: Food[] = [
   {
     id: "65",
     name: "Banha de porco",
+    nameEn: "Lard",
     category: "Óleos e Gorduras",
     portion: "15",
     unit: "ml (1 colher de sopa)",
@@ -883,6 +948,7 @@ const coreFoods: Food[] = [
   {
     id: "66",
     name: "Açúcar refinado",
+    nameEn: "Refined sugar",
     category: "Açúcares e Doces",
     portion: "5",
     unit: "g (1 colher de chá)",
@@ -896,6 +962,7 @@ const coreFoods: Food[] = [
   {
     id: "67",
     name: "Mel",
+    nameEn: "Honey",
     category: "Açúcares e Doces",
     portion: "20",
     unit: "g (1 colher de sopa)",
@@ -909,6 +976,7 @@ const coreFoods: Food[] = [
   {
     id: "68",
     name: "Doce de leite",
+    nameEn: "Dulce de leche",
     category: "Açúcares e Doces",
     portion: "20",
     unit: "g (1 colher de sopa)",
@@ -922,6 +990,7 @@ const coreFoods: Food[] = [
   {
     id: "69",
     name: "Goiabada",
+    nameEn: "Guava paste",
     category: "Açúcares e Doces",
     portion: "40",
     unit: "g",
@@ -935,6 +1004,7 @@ const coreFoods: Food[] = [
   {
     id: "70",
     name: "Chocolate ao leite",
+    nameEn: "Milk chocolate",
     category: "Açúcares e Doces",
     portion: "25",
     unit: "g",
@@ -950,6 +1020,7 @@ const coreFoods: Food[] = [
   {
     id: "71",
     name: "Iogurte de morango",
+    nameEn: "Strawberry yogurt",
     category: "Industrializados",
     portion: "170",
     unit: "g",
@@ -963,6 +1034,7 @@ const coreFoods: Food[] = [
   {
     id: "72",
     name: "Refrigerante (cola)",
+    nameEn: "Cola soda",
     category: "Bebidas",
     portion: "350",
     unit: "ml",
@@ -976,6 +1048,7 @@ const coreFoods: Food[] = [
   {
     id: "73",
     name: "Salsicha",
+    nameEn: "Sausage",
     category: "Industrializados",
     portion: "50",
     unit: "g (1 unidade)",
@@ -989,6 +1062,7 @@ const coreFoods: Food[] = [
   {
     id: "74",
     name: "Nuggets de frango, frito",
+    nameEn: "Fried chicken nuggets",
     category: "Industrializados",
     portion: "100",
     unit: "g (6 unidades)",
@@ -1002,6 +1076,7 @@ const coreFoods: Food[] = [
   {
     id: "75",
     name: "Lasanha bolonhesa congelada",
+    nameEn: "Frozen lasagna bolognese",
     category: "Industrializados",
     portion: "300",
     unit: "g",
@@ -1015,6 +1090,7 @@ const coreFoods: Food[] = [
   {
     id: "76",
     name: "Pizza de muçarela",
+    nameEn: "Mozzarella pizza",
     category: "Industrializados",
     portion: "100",
     unit: "g (1 fatia)",
@@ -1028,6 +1104,7 @@ const coreFoods: Food[] = [
   {
     id: "77",
     name: "Hambúrguer de carne",
+    nameEn: "Beef burger",
     category: "Industrializados",
     portion: "80",
     unit: "g",
@@ -1041,6 +1118,7 @@ const coreFoods: Food[] = [
   {
     id: "78",
     name: "Molho de tomate pronto",
+    nameEn: "Ready-made tomato sauce",
     category: "Industrializados",
     portion: "60",
     unit: "g (3 colheres)",
@@ -1054,6 +1132,7 @@ const coreFoods: Food[] = [
   {
     id: "79",
     name: "Macarrão instantâneo",
+    nameEn: "Instant noodles",
     category: "Industrializados",
     portion: "85",
     unit: "g",
@@ -1067,6 +1146,7 @@ const coreFoods: Food[] = [
   {
     id: "80",
     name: "Batata frita (fast food)",
+    nameEn: "French fries (fast food)",
     category: "Industrializados",
     portion: "100",
     unit: "g",
@@ -1082,6 +1162,7 @@ const coreFoods: Food[] = [
   {
     id: "81",
     name: "Suco de laranja natural",
+    nameEn: "Natural orange juice",
     category: "Bebidas",
     portion: "200",
     unit: "ml",
@@ -1095,6 +1176,7 @@ const coreFoods: Food[] = [
   {
     id: "82",
     name: "Café coado, sem açúcar",
+    nameEn: "Brewed coffee, unsweetened",
     category: "Bebidas",
     portion: "150",
     unit: "ml",
@@ -1108,6 +1190,7 @@ const coreFoods: Food[] = [
   {
     id: "83",
     name: "Água de coco",
+    nameEn: "Coconut water",
     category: "Bebidas",
     portion: "200",
     unit: "ml",
@@ -1121,6 +1204,7 @@ const coreFoods: Food[] = [
   {
     id: "84",
     name: "Cerveja Pilsen",
+    nameEn: "Pilsen beer",
     category: "Bebidas",
     portion: "350",
     unit: "ml",
@@ -1134,6 +1218,7 @@ const coreFoods: Food[] = [
   {
     id: "85",
     name: "Vinho tinto seco",
+    nameEn: "Dry red wine",
     category: "Bebidas",
     portion: "150",
     unit: "ml",
@@ -1149,6 +1234,7 @@ const coreFoods: Food[] = [
   {
     id: "86",
     name: "Feijoada",
+    nameEn: "Feijoada (pork and black bean stew)",
     category: "Preparações",
     portion: "200",
     unit: "g",
@@ -1162,6 +1248,7 @@ const coreFoods: Food[] = [
   {
     id: "87",
     name: "Moqueca de peixe",
+    nameEn: "Fish moqueca (stew)",
     category: "Preparações",
     portion: "200",
     unit: "g",
@@ -1175,6 +1262,7 @@ const coreFoods: Food[] = [
   {
     id: "88",
     name: "Strogonoff de frango",
+    nameEn: "Chicken stroganoff",
     category: "Preparações",
     portion: "150",
     unit: "g",
@@ -1188,6 +1276,7 @@ const coreFoods: Food[] = [
   {
     id: "89",
     name: "Pão de queijo",
+    nameEn: "Cheese bread",
     category: "Preparações",
     portion: "50",
     unit: "g (2 unidades)",
@@ -1201,6 +1290,7 @@ const coreFoods: Food[] = [
   {
     id: "90",
     name: "Coxinha de frango",
+    nameEn: "Chicken coxinha (croquette)",
     category: "Preparações",
     portion: "100",
     unit: "g",
@@ -1214,6 +1304,7 @@ const coreFoods: Food[] = [
   {
     id: "91",
     name: "Farofa de mandioca",
+    nameEn: "Cassava farofa",
     category: "Preparações",
     portion: "50",
     unit: "g",
@@ -1227,6 +1318,7 @@ const coreFoods: Food[] = [
   {
     id: "92",
     name: "Salada de maionese",
+    nameEn: "Potato salad (with mayonnaise)",
     category: "Preparações",
     portion: "100",
     unit: "g",
@@ -1240,6 +1332,7 @@ const coreFoods: Food[] = [
   {
     id: "93",
     name: "Arroz de carreteiro",
+    nameEn: "Carreteiro rice",
     category: "Preparações",
     portion: "200",
     unit: "g",
@@ -1253,6 +1346,7 @@ const coreFoods: Food[] = [
   {
     id: "94",
     name: "Vaca atolada",
+    nameEn: "Vaca atolada (beef and cassava stew)",
     category: "Preparações",
     portion: "200",
     unit: "g",
@@ -1266,6 +1360,7 @@ const coreFoods: Food[] = [
   {
     id: "95",
     name: "Escondidinho de carne seca",
+    nameEn: "Dried beef escondidinho (shepherd's pie)",
     category: "Preparações",
     portion: "200",
     unit: "g",
@@ -1279,6 +1374,7 @@ const coreFoods: Food[] = [
   {
     id: "96",
     name: "Canjica",
+    nameEn: "Canjica (sweet corn hominy)",
     category: "Preparações",
     portion: "150",
     unit: "g",
@@ -1292,6 +1388,7 @@ const coreFoods: Food[] = [
   {
     id: "97",
     name: "Brigadeiro",
+    nameEn: "Brigadeiro (chocolate truffle)",
     category: "Açúcares e Doces",
     portion: "20",
     unit: "g (1 unidade)",
@@ -1305,6 +1402,7 @@ const coreFoods: Food[] = [
   {
     id: "98",
     name: "Bolo de cenoura com cobertura",
+    nameEn: "Carrot cake with chocolate topping",
     category: "Preparações",
     portion: "100",
     unit: "g",
@@ -1318,6 +1416,7 @@ const coreFoods: Food[] = [
   {
     id: "99",
     name: "Pastel de carne, frito",
+    nameEn: "Fried beef pastel",
     category: "Preparações",
     portion: "100",
     unit: "g",
@@ -1331,6 +1430,7 @@ const coreFoods: Food[] = [
   {
     id: "100",
     name: "Acarajé",
+    nameEn: "Acaraje (deep-fried black-eyed pea fritter)",
     category: "Preparações",
     portion: "150",
     unit: "g",
@@ -1344,6 +1444,7 @@ const coreFoods: Food[] = [
   {
     id: "101",
     name: "Arroz integral, cozido",
+    nameEn: "Cooked brown rice",
     category: "Cereais e Derivados",
     portion: "100",
     unit: "g",
@@ -1357,6 +1458,7 @@ const coreFoods: Food[] = [
   {
     id: "102",
     name: "Feijão preto, cozido",
+    nameEn: "Cooked black beans",
     category: "Leguminosas",
     portion: "100",
     unit: "g",
@@ -1374,9 +1476,11 @@ const coreFoods: Food[] = [
  * (foodsExtra), removendo duplicatas por nome (o núcleo tem prioridade).
  */
 const _seen = new Set<string>();
-export const brazilianFoods: Food[] = [...coreFoods, ...extraFoods].filter((f) => {
-  const key = f.name.trim().toLowerCase();
-  if (_seen.has(key)) return false;
-  _seen.add(key);
-  return true;
-});
+export const brazilianFoods: Food[] = [...coreFoods, ...extraFoods].filter(
+  (f) => {
+    const key = f.name.trim().toLowerCase();
+    if (_seen.has(key)) return false;
+    _seen.add(key);
+    return true;
+  },
+);

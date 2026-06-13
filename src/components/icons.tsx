@@ -41,6 +41,46 @@ export const UtensilsIcon: React.FC<IconProps> = (props) => (
   </svg>
 );
 
+export const LogoIcon: React.FC<IconProps> = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    {/* Outer Shield Outline */}
+    <path 
+      d="M12 2 3 5v6c0 5.5 4.5 10 9 11 4.5-1 9-5.5 9-11V5l-9-3z" 
+      stroke="currentColor" 
+      strokeWidth="2"
+      strokeLinejoin="round"
+      fill="none"
+    />
+    {/* Inner Leaf/Clinical Droplet Silhouette */}
+    <path 
+      d="M12 6c-2.2 0-4 1.8-4 4 0 3.2 4 6 4 6s4-2.8 4-6c0-2.2-1.8-4-4-4z" 
+      stroke="currentColor" 
+      strokeWidth="1.2"
+      fill="currentColor"
+      fillOpacity="0.15"
+      opacity="0.35"
+    />
+    {/* Solid Storm/Lightning Bolt */}
+    <path 
+      d="M13.5 6.5 8.5 12.5h3.5l-1.5 5 5-6h-3.5l1.5-5z" 
+      fill="currentColor" 
+      stroke="none"
+    />
+  </svg>
+);
+
+
 export const BarChart3Icon: React.FC<IconProps> = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"

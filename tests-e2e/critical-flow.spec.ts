@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Isanutri V5 - E2E Critical Flow", () => {
-  const randomEmail = `nutri.e2e.${Date.now()}.${Math.floor(Math.random() * 1000)}@isanutri.com`;
+test.describe("Storm Nutrition V5 - E2E Critical Flow", () => {
+  const randomEmail = `nutri.e2e.${Date.now()}.${Math.floor(Math.random() * 1000)}@stormnutrition.com`;
   const testPassword = "password123";
 
   test("should register a new nutritionist, access dashboard and toggle dark mode", async ({ page }) => {

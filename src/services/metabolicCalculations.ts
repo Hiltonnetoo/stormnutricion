@@ -77,11 +77,13 @@ export const calculateBMI = (weight: number, height: number): number => {
  * Provides a classification for a given BMI value.
  */
 export const getBMICategory = (bmi: number): string => {
-  if (bmi < 18.5) return i18next.t("metabolic.bmi_underweight", "Abaixo do peso");
+  if (bmi < 18.5)
+    return i18next.t("metabolic.bmi_underweight", "Abaixo do peso");
   if (bmi < 25) return i18next.t("metabolic.bmi_normal", "Peso normal");
   if (bmi < 30) return i18next.t("metabolic.bmi_overweight", "Sobrepeso");
   if (bmi < 35) return i18next.t("metabolic.bmi_obesity_1", "Obesidade Grau I");
-  if (bmi < 40) return i18next.t("metabolic.bmi_obesity_2", "Obesidade Grau II");
+  if (bmi < 40)
+    return i18next.t("metabolic.bmi_obesity_2", "Obesidade Grau II");
   return i18next.t("metabolic.bmi_obesity_3", "Obesidade Grau III");
 };
 
@@ -146,14 +148,21 @@ export const estimateTimeToGoal = (
   tdee: number,
 ): string => {
   const calorieDifference = tdee - dailyCalories;
-  if (Math.abs(calorieDifference) < 100) return i18next.t("metabolic.time_to_goal_maintenance", "Manutenção de peso.");
+  if (Math.abs(calorieDifference) < 100)
+    return i18next.t(
+      "metabolic.time_to_goal_maintenance",
+      "Manutenção de peso.",
+    );
 
   const weightDifference = currentWeight - targetWeight;
   if (
     (calorieDifference > 0 && weightDifference < 0) ||
     (calorieDifference < 0 && weightDifference > 0)
   ) {
-    return i18next.t("metabolic.time_to_goal_inconsistent", "Meta calórica inconsistente com o objetivo de peso.");
+    return i18next.t(
+      "metabolic.time_to_goal_inconsistent",
+      "Meta calórica inconsistente com o objetivo de peso.",
+    );
   }
 
   const totalCalorieDifference = Math.abs(weightDifference * 7700);
@@ -176,9 +185,19 @@ export const validateNutrition = (
 ) => {
   const errors: string[] = [];
   if (calories < 800)
-    errors.push(i18next.t("metabolic.validate_calories_low", "Alerta: Calorias diárias abaixo do mínimo seguro (800 kcal)."));
+    errors.push(
+      i18next.t(
+        "metabolic.validate_calories_low",
+        "Alerta: Calorias diárias abaixo do mínimo seguro (800 kcal).",
+      ),
+    );
   if (calories > 5000)
-    errors.push(i18next.t("metabolic.validate_calories_high", "Alerta: Calorias diárias muito elevadas (> 5000 kcal)."));
+    errors.push(
+      i18next.t(
+        "metabolic.validate_calories_high",
+        "Alerta: Calorias diárias muito elevadas (> 5000 kcal).",
+      ),
+    );
 
   const proteinPerKg = proteinGrams / weight;
   if (proteinPerKg < 0.8)
@@ -186,14 +205,14 @@ export const validateNutrition = (
       i18next.t("metabolic.validate_protein_low", {
         current: proteinPerKg.toFixed(1),
         defaultValue: `Alerta: Proteína abaixo do mínimo recomendado (0.8g/kg). Atual: ${proteinPerKg.toFixed(1)}g/kg`,
-      })
+      }),
     );
   if (proteinPerKg > 2.5)
     errors.push(
       i18next.t("metabolic.validate_protein_high", {
         current: proteinPerKg.toFixed(1),
         defaultValue: `Alerta: Proteína acima do limite seguro (2.5g/kg). Atual: ${proteinPerKg.toFixed(1)}g/kg`,
-      })
+      }),
     );
 
   return errors;

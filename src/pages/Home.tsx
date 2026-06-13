@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
-  UtensilsIcon,
+  LogoIcon,
   UsersIcon,
   ZapIcon,
   BarChart3Icon,
@@ -27,10 +27,10 @@ const Logo: React.FC<{ onClick?: () => void }> = ({ onClick }) => (
     className="flex items-center gap-2.5 group focus-ring rounded-xl cursor-pointer"
   >
     <div className="bg-gradient-to-tr from-sage-700 via-sage-600 to-sage-400 p-2 rounded-xl shadow-glow group-hover:scale-105 transition-transform duration-300">
-      <UtensilsIcon className="w-5 h-5 text-white" />
+      <LogoIcon className="w-5 h-5 text-white" />
     </div>
     <span className="text-xl font-extrabold tracking-tight text-slate-900">
-      Isanutri<span className="text-sage-600">.pro</span>
+      Storm <span className="text-sage-600">Nutrition</span>
     </span>
   </button>
 );
@@ -113,14 +113,6 @@ const Hero: React.FC = () => {
         <div className="grid lg:grid-cols-2 items-center gap-16 lg:gap-20">
           {/* copy */}
           <div className="text-center lg:text-left animate-fade-in-up">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-sage-100 text-sage-700 text-xs font-bold uppercase tracking-wider mb-7 shadow-sm">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sage-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-sage-500" />
-              </span>
-              {t("home.tagline_version")}
-            </div>
-
             <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-slate-900 leading-[1.05] tracking-tight">
               {t("home.hero_title_1")}
               <br />
@@ -145,14 +137,16 @@ const Hero: React.FC = () => {
             </div>
 
             <div className="mt-10 flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2 text-sm text-slate-500 font-medium">
-              {[t("home.hero_check_1"), t("home.hero_check_2"), t("home.hero_check_3")].map(
-                (text) => (
-                  <span key={text} className="inline-flex items-center gap-1.5">
-                    <CheckCircleIcon className="w-4 h-4 text-sage-500" />
-                    {text}
-                  </span>
-                ),
-              )}
+              {[
+                t("home.hero_check_1"),
+                t("home.hero_check_2"),
+                t("home.hero_check_3"),
+              ].map((text) => (
+                <span key={text} className="inline-flex items-center gap-1.5">
+                  <CheckCircleIcon className="w-4 h-4 text-sage-500" />
+                  {text}
+                </span>
+              ))}
             </div>
           </div>
 
@@ -182,17 +176,25 @@ const DashFrame: React.FC = () => {
         {[
           [t("nav.patients"), "48", "bg-sky-50 text-sky-700"],
           [t("dashboard.created_plans"), "124", "bg-sage-50 text-sage-700"],
-          [t("dashboard.retention", { rate: 87 }), "87%", "bg-emerald-50 text-emerald-700"],
+          [
+            t("dashboard.retention", { rate: 87 }),
+            "87%",
+            "bg-emerald-50 text-emerald-700",
+          ],
         ].map(([label, val, cls]) => (
           <div key={label} className={`${cls} rounded-xl p-3`}>
-            <p className="text-[11px] font-bold uppercase opacity-60">{label}</p>
+            <p className="text-[11px] font-bold uppercase opacity-60">
+              {label}
+            </p>
             <p className="text-xl font-extrabold stat-number">{val}</p>
           </div>
         ))}
       </div>
       <div className="bg-white rounded-xl p-3 border border-slate-100">
         <p className="text-[11px] font-bold text-slate-400 uppercase mb-2">
-          {isEn ? "Performance · last 6 months" : "Performance · últimos 6 meses"}
+          {isEn
+            ? "Performance · last 6 months"
+            : "Performance · últimos 6 meses"}
         </p>
         <div className="flex items-end justify-between gap-2 h-20">
           {[
@@ -203,26 +205,43 @@ const DashFrame: React.FC = () => {
             [monthlyLabels[4], 64],
             [monthlyLabels[5], 92],
           ].map(([label, h]) => (
-            <div key={label as string} className="flex-1 flex flex-col items-center gap-1 h-full justify-end">
+            <div
+              key={label as string}
+              className="flex-1 flex flex-col items-center gap-1 h-full justify-end"
+            >
               <div
                 className="w-full rounded-t-md bg-gradient-to-t from-sage-300 to-sage-500"
                 style={{ height: `${h}%` }}
               />
-              <span className="text-[9px] font-semibold text-slate-400 uppercase">{label}</span>
+              <span className="text-[9px] font-semibold text-slate-400 uppercase">
+                {label}
+              </span>
             </div>
           ))}
         </div>
       </div>
       <div className="bg-white rounded-xl p-3 border border-slate-100">
-        <p className="text-[11px] font-bold text-slate-400 uppercase mb-2">{t("dashboard.recent_activity")}</p>
+        <p className="text-[11px] font-bold text-slate-400 uppercase mb-2">
+          {t("dashboard.recent_activity")}
+        </p>
         <div className="space-y-2">
           {[
-            ["🥗", t("dashboard.activity_diet", { name: "Ana Lima" }), isEn ? "Today" : "Hoje"],
-            ["👤", t("dashboard.activity_registered", { name: "Carlos Melo" }), isEn ? "Yesterday" : "Ontem"],
+            [
+              "🥗",
+              t("dashboard.activity_diet", { name: "Ana Lima" }),
+              isEn ? "Today" : "Hoje",
+            ],
+            [
+              "👤",
+              t("dashboard.activity_registered", { name: "Carlos Melo" }),
+              isEn ? "Yesterday" : "Ontem",
+            ],
           ].map(([icon, text, when]) => (
             <div key={text} className="flex items-center gap-2.5">
               <span className="text-sm">{icon}</span>
-              <span className="text-[11px] text-slate-600 font-medium flex-1">{text}</span>
+              <span className="text-[11px] text-slate-600 font-medium flex-1">
+                {text}
+              </span>
               <span className="text-[11px] text-slate-400">{when}</span>
             </div>
           ))}
@@ -240,24 +259,62 @@ const PatientsFrame: React.FC = () => {
     <div className="p-4 bg-slate-50 min-h-[296px]">
       <div className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-xl mb-3">
         <SearchIcon className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-        <span className="text-[11px] text-slate-400">{t("search.placeholder")}</span>
+        <span className="text-[11px] text-slate-400">
+          {t("search.placeholder")}
+        </span>
       </div>
       <div className="bg-white rounded-xl border border-slate-100 divide-y divide-slate-100">
         {[
-          ["AL", "Ana Lima", isEn ? "32 years" : "32 anos", isEn ? "Active" : "Ativa", "bg-emerald-50 text-emerald-700", "bg-sage-100 text-sage-700"],
-          ["CM", "Carlos Melo", isEn ? "45 years" : "45 anos", isEn ? "Needs review" : "Requer revisão", "bg-amber-50 text-amber-700", "bg-sky-100 text-sky-700"],
-          ["JS", "Juliana Souza", isEn ? "28 years" : "28 anos", isEn ? "Active" : "Ativa", "bg-emerald-50 text-emerald-700", "bg-violet-100 text-violet-700"],
-          ["RP", "Rafael Pinto", isEn ? "51 years" : "51 anos", isEn ? "No diet" : "Sem dieta", "bg-slate-100 text-slate-500", "bg-rose-100 text-rose-700"],
+          [
+            "AL",
+            "Ana Lima",
+            isEn ? "32 years" : "32 anos",
+            isEn ? "Active" : "Ativa",
+            "bg-emerald-50 text-emerald-700",
+            "bg-sage-100 text-sage-700",
+          ],
+          [
+            "CM",
+            "Carlos Melo",
+            isEn ? "45 years" : "45 anos",
+            isEn ? "Needs review" : "Requer revisão",
+            "bg-amber-50 text-amber-700",
+            "bg-sky-100 text-sky-700",
+          ],
+          [
+            "JS",
+            "Juliana Souza",
+            isEn ? "28 years" : "28 anos",
+            isEn ? "Active" : "Ativa",
+            "bg-emerald-50 text-emerald-700",
+            "bg-violet-100 text-violet-700",
+          ],
+          [
+            "RP",
+            "Rafael Pinto",
+            isEn ? "51 years" : "51 anos",
+            isEn ? "No diet" : "Sem dieta",
+            "bg-slate-100 text-slate-500",
+            "bg-rose-100 text-rose-700",
+          ],
         ].map(([ini, name, age, status, badgeCls, avCls]) => (
           <div key={name} className="flex items-center gap-3 px-3 py-2.5">
-            <div className={`w-8 h-8 rounded-lg ${avCls} text-[10px] font-bold flex items-center justify-center`}>
+            <div
+              className={`w-8 h-8 rounded-lg ${avCls} text-[10px] font-bold flex items-center justify-center`}
+            >
               {ini}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[12px] font-bold text-slate-800 truncate">{name}</p>
+              <p className="text-[12px] font-bold text-slate-800 truncate">
+                {name}
+              </p>
               <p className="text-[10px] text-slate-400">{age}</p>
             </div>
-            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${badgeCls}`}>{status}</span>
+            <span
+              className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${badgeCls}`}
+            >
+              {status}
+            </span>
           </div>
         ))}
       </div>
@@ -285,16 +342,36 @@ const PlanFrame: React.FC = () => {
         ))}
       </div>
       {[
-        [isEn ? "Breakfast" : "Café da Manhã", "07:00", "510 kcal", isEn ? "Scrambled eggs, Tapioca and Avocado" : "Ovos mexidos, Tapioca e Abacate"],
-        [isEn ? "Lunch" : "Almoço", "12:30", "714 kcal", isEn ? "Grilled chicken, Brown rice and Olive oil" : "Frango grelhado, Arroz integral e Azeite"],
+        [
+          isEn ? "Breakfast" : "Café da Manhã",
+          "07:00",
+          "510 kcal",
+          isEn
+            ? "Scrambled eggs, Tapioca and Avocado"
+            : "Ovos mexidos, Tapioca e Abacate",
+        ],
+        [
+          isEn ? "Lunch" : "Almoço",
+          "12:30",
+          "714 kcal",
+          isEn
+            ? "Grilled chicken, Brown rice and Olive oil"
+            : "Frango grelhado, Arroz integral e Azeite",
+        ],
       ].map(([meal, time, kcal, items]) => (
-        <div key={meal} className="bg-white rounded-xl p-3 border border-slate-100 relative overflow-hidden">
+        <div
+          key={meal}
+          className="bg-white rounded-xl p-3 border border-slate-100 relative overflow-hidden"
+        >
           <div className="absolute left-0 top-0 bottom-0 w-1 bg-sage-500" />
           <div className="flex items-center justify-between mb-1 pl-1.5">
             <p className="text-[12px] font-bold text-slate-800">
-              {meal} <span className="text-slate-400 font-medium">— {time}</span>
+              {meal}{" "}
+              <span className="text-slate-400 font-medium">— {time}</span>
             </p>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sage-100 text-sage-700">{kcal}</span>
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sage-100 text-sage-700">
+              {kcal}
+            </span>
           </div>
           <p className="text-[11px] text-slate-500 pl-1.5">{items}</p>
         </div>
@@ -304,9 +381,9 @@ const PlanFrame: React.FC = () => {
 };
 
 const showcaseFrames = [
-  { url: "isanutri.app/visao-geral", Frame: DashFrame },
-  { url: "isanutri.app/pacientes", Frame: PatientsFrame },
-  { url: "isanutri.app/gerador", Frame: PlanFrame },
+  { url: "stormnutrition.app/visao-geral", Frame: DashFrame },
+  { url: "stormnutrition.app/pacientes", Frame: PatientsFrame },
+  { url: "stormnutrition.app/gerador", Frame: PlanFrame },
 ];
 
 const ProductShowcase: React.FC = () => {
@@ -356,7 +433,9 @@ const ProductShowcase: React.FC = () => {
             onClick={() => setActive(i)}
             aria-label={`Ver ${f.url}`}
             className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-              i === active ? "w-6 bg-sage-500" : "w-1.5 bg-slate-300 hover:bg-slate-400"
+              i === active
+                ? "w-6 bg-sage-500"
+                : "w-1.5 bg-slate-300 hover:bg-slate-400"
             }`}
           />
         ))}
@@ -368,8 +447,12 @@ const ProductShowcase: React.FC = () => {
           <ZapIcon className="w-5 h-5" />
         </div>
         <div>
-          <p className="text-[11px] font-bold text-slate-900">{t("home.portal_mock_checkin_title", "Dieta gerada")}</p>
-          <p className="text-[11px] text-slate-400">{t("home.portal_mock_checkin_desc", "em 3 segundos")}</p>
+          <p className="text-[11px] font-bold text-slate-900">
+            {t("home.portal_mock_checkin_title", "Dieta gerada")}
+          </p>
+          <p className="text-[11px] text-slate-400">
+            {t("home.portal_mock_checkin_desc", "em 3 segundos")}
+          </p>
         </div>
       </div>
     </div>
@@ -394,7 +477,9 @@ const Stats: React.FC = () => {
             <p className="text-3xl lg:text-4xl font-extrabold text-sage-600 stat-number">
               {t(`home.${valKey}`)}
             </p>
-            <p className="mt-1 text-sm text-slate-500 font-medium">{t(`home.${lblKey}`)}</p>
+            <p className="mt-1 text-sm text-slate-500 font-medium">
+              {t(`home.${lblKey}`)}
+            </p>
           </div>
         ))}
       </div>
@@ -456,10 +541,7 @@ const Features: React.FC = () => {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 stagger">
           {features.map((f) => (
-            <div
-              key={f.title}
-              className="group card-hover p-7"
-            >
+            <div key={f.title} className="group card-hover p-7">
               <div className="w-13 h-13 mb-5 flex items-center justify-center rounded-2xl bg-sage-50 text-sage-600 transition-all duration-300 group-hover:bg-sage-600 group-hover:text-white group-hover:scale-105">
                 {f.icon}
               </div>
@@ -551,7 +633,10 @@ const PatientPortalHighlight: React.FC = () => {
                 t("home.portal_check_2"),
                 t("home.portal_check_3"),
               ].map((text) => (
-                <li key={text} className="flex items-center gap-3 text-slate-700 font-medium">
+                <li
+                  key={text}
+                  className="flex items-center gap-3 text-slate-700 font-medium"
+                >
                   <span className="flex h-6 w-6 items-center justify-center rounded-full bg-sage-100 text-sage-600">
                     <CheckCircleIcon className="w-4 h-4" />
                   </span>
@@ -570,7 +655,8 @@ const PatientPortalHighlight: React.FC = () => {
                   </p>
                   <p className="text-xl font-extrabold">Mariana</p>
                   <div className="mt-4 flex items-center gap-2 text-xs bg-white/15 rounded-lg px-3 py-2 w-fit">
-                    <HeartIcon className="w-4 h-4" /> {t("home.portal_mock_current")}
+                    <HeartIcon className="w-4 h-4" />{" "}
+                    {t("home.portal_mock_current")}
                   </div>
                 </div>
                 <div className="p-4 space-y-2.5">
@@ -578,8 +664,12 @@ const PatientPortalHighlight: React.FC = () => {
                   <div className="flex items-center gap-2.5 rounded-xl bg-sage-50 border border-sage-100 px-3 py-2.5">
                     <span className="text-base">🌟</span>
                     <div>
-                      <p className="text-[9px] font-bold text-sage-600 uppercase tracking-wide">{t("home.portal_mock_checkin_title")}</p>
-                      <p className="text-[11px] font-bold text-slate-700">{t("home.portal_mock_checkin_desc")}</p>
+                      <p className="text-[9px] font-bold text-sage-600 uppercase tracking-wide">
+                        {t("home.portal_mock_checkin_title")}
+                      </p>
+                      <p className="text-[11px] font-bold text-slate-700">
+                        {t("home.portal_mock_checkin_desc")}
+                      </p>
                     </div>
                   </div>
                   {[
@@ -593,8 +683,12 @@ const PatientPortalHighlight: React.FC = () => {
                       className="flex items-center justify-between rounded-xl bg-slate-50 px-3.5 py-2.5 border border-slate-100"
                     >
                       <div>
-                        <p className="text-[12px] font-semibold text-slate-700 leading-tight">{m}</p>
-                        <p className="text-[10px] text-slate-400">{time} · {kcal}</p>
+                        <p className="text-[12px] font-semibold text-slate-700 leading-tight">
+                          {m}
+                        </p>
+                        <p className="text-[10px] text-slate-400">
+                          {time} · {kcal}
+                        </p>
                       </div>
                       <ChevronRightIcon className="w-4 h-4 text-slate-300" />
                     </div>
@@ -624,7 +718,9 @@ const Pricing: React.FC = () => {
       tagline: t("home.pricing_free_tagline"),
       cta: t("home.pricing_free_cta"),
       highlighted: false,
-      features: t("home.pricing_free_features", { returnObjects: true }) as string[],
+      features: t("home.pricing_free_features", {
+        returnObjects: true,
+      }) as string[],
     },
     {
       name: t("home.pricing_pro_title"),
@@ -633,7 +729,9 @@ const Pricing: React.FC = () => {
       tagline: t("home.pricing_pro_tagline"),
       cta: t("home.pricing_pro_cta"),
       highlighted: true,
-      features: t("home.pricing_pro_features", { returnObjects: true }) as string[],
+      features: t("home.pricing_pro_features", {
+        returnObjects: true,
+      }) as string[],
     },
     {
       name: t("home.pricing_clinic_title"),
@@ -642,7 +740,9 @@ const Pricing: React.FC = () => {
       tagline: t("home.pricing_clinic_tagline"),
       cta: t("home.pricing_clinic_cta"),
       highlighted: false,
-      features: t("home.pricing_clinic_features", { returnObjects: true }) as string[],
+      features: t("home.pricing_clinic_features", {
+        returnObjects: true,
+      }) as string[],
     },
   ];
 
@@ -675,7 +775,9 @@ const Pricing: React.FC = () => {
             >
               {plan.highlighted && (
                 <span className="absolute top-5 right-5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-[11px] font-bold uppercase tracking-wider">
-                  {i18n.language.startsWith("pt") ? "Mais popular" : "Most popular"}
+                  {i18n.language.startsWith("pt")
+                    ? "Mais popular"
+                    : "Most popular"}
                 </span>
               )}
               <h3
@@ -706,12 +808,18 @@ const Pricing: React.FC = () => {
                   <li key={f} className="flex items-start gap-2.5 text-sm">
                     <span
                       className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${
-                        plan.highlighted ? "bg-white/20 text-white" : "bg-sage-100 text-sage-600"
+                        plan.highlighted
+                          ? "bg-white/20 text-white"
+                          : "bg-sage-100 text-sage-600"
                       }`}
                     >
                       <CheckCircleIcon className="w-3.5 h-3.5" />
                     </span>
-                    <span className={plan.highlighted ? "text-sage-50" : "text-slate-600"}>
+                    <span
+                      className={
+                        plan.highlighted ? "text-sage-50" : "text-slate-600"
+                      }
+                    >
                       {f}
                     </span>
                   </li>
@@ -786,26 +894,36 @@ const Footer: React.FC = () => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2.5">
             <div className="bg-gradient-to-tr from-sage-600 to-sage-400 p-2 rounded-xl">
-              <UtensilsIcon className="w-5 h-5 text-white" />
+              <LogoIcon className="w-5 h-5 text-white" />
             </div>
             <span className="text-lg font-extrabold text-white tracking-tight">
-              Isanutri<span className="text-sage-400">.pro</span>
+              Storm <span className="text-sage-400">Nutrition</span>
             </span>
           </div>
           <div className="flex items-center gap-6 text-sm font-medium">
-            <button onClick={() => navigate("/login")} className="hover:text-white transition-colors cursor-pointer">
+            <button
+              onClick={() => navigate("/login")}
+              className="hover:text-white transition-colors cursor-pointer"
+            >
               {t("home.login")}
             </button>
-            <button onClick={() => navigate("/register")} className="hover:text-white transition-colors cursor-pointer">
+            <button
+              onClick={() => navigate("/register")}
+              className="hover:text-white transition-colors cursor-pointer"
+            >
               {t("home.register")}
             </button>
-            <button onClick={() => navigate("/paciente")} className="hover:text-white transition-colors cursor-pointer">
+            <button
+              onClick={() => navigate("/paciente")}
+              className="hover:text-white transition-colors cursor-pointer"
+            >
               {t("home.footer_patient_area")}
             </button>
           </div>
         </div>
         <div className="mt-10 pt-8 border-t border-slate-800 text-center text-sm">
-          &copy; {new Date().getFullYear()} Isanutri. {t("home.footer_text")}
+          &copy; {new Date().getFullYear()} Storm Nutrition.{" "}
+          {t("home.footer_text")}
         </div>
       </div>
     </footer>

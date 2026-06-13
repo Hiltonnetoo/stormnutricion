@@ -6,7 +6,7 @@ import {
   deleteUser,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { auth, db, storage, updateProfile } from "./firebaseCore";
 import type { User } from "./firebaseCore";
@@ -69,6 +69,7 @@ export const setupPatientPortalAccess = async (
   );
   const secondaryAuth = getAuth(secondaryApp);
   let createdUser: User | null = null;
+  let profileCreated = false;
   try {
     const cred = await createUserWithEmailAndPassword(
       secondaryAuth,
@@ -86,6 +87,7 @@ export const setupPatientPortalAccess = async (
       role: "patient",
       createdAt: new Date().toISOString(),
     });
+    profileCreated = true;
 
     // 2. Update patient reference with portalUid
     await updateDoc(doc(db, "users", nutritionistId, "patients", patientId), {
@@ -94,6 +96,13 @@ export const setupPatientPortalAccess = async (
 
     return createdUser.uid;
   } catch (error) {
+    if (profileCreated && createdUser) {
+      try {
+        await deleteDoc(doc(db, "patientProfiles", createdUser.uid));
+      } catch (dbErr) {
+        console.error("Erro ao deletar profile no rollback:", dbErr);
+      }
+    }
     if (createdUser) {
       try {
         await deleteUser(createdUser);

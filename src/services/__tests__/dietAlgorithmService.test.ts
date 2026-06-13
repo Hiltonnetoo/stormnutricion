@@ -1,6 +1,9 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import i18next from "i18next";
-import { generateAlgorithmicDietPlan, getGeneralObservations } from "../dietAlgorithmService";
+import {
+  generateAlgorithmicDietPlan,
+  getGeneralObservations,
+} from "../dietAlgorithmService";
 import { brazilianFoods } from "../../data/foods";
 import { getNovaGroup } from "../foodService";
 
@@ -13,28 +16,40 @@ describe("dietAlgorithmService", () => {
           translation: {
             diet: {
               obs_hydration: "Mantenha-se bem hidratado ao longo do dia.",
-              obs_seasoning: "Prefira temperos naturais como alho, cebola, ervas e especiarias.",
-              obs_sugary_drinks: "Evite o consumo de bebidas açucaradas, como refrigerantes e sucos industrializados.",
-              obs_exercise: "Pratique atividade física regularmente, conforme orientação profissional.",
-              obs_chewing: "Mastigue bem os alimentos e faça suas refeições em um ambiente tranquilo.",
-              log_restrict_categories: "Restringindo categorias por tipo de dieta: {{categories}}",
-              log_exclude_ultraprocessed: "Excluindo ultraprocessados (NOVA 4) do plano",
+              obs_seasoning:
+                "Prefira temperos naturais como alho, cebola, ervas e especiarias.",
+              obs_sugary_drinks:
+                "Evite o consumo de bebidas açucaradas, como refrigerantes e sucos industrializados.",
+              obs_exercise:
+                "Pratique atividade física regularmente, conforme orientação profissional.",
+              obs_chewing:
+                "Mastigue bem os alimentos e faça suas refeições em um ambiente tranquilo.",
+              log_restrict_categories:
+                "Restringindo categorias por tipo de dieta: {{categories}}",
+              log_exclude_ultraprocessed:
+                "Excluindo ultraprocessados (NOVA 4) do plano",
               log_remove_dairy: "Removendo laticínios (Restrição: Sem Lactose)",
-              log_clinical_mode: "Limpando banco para Modo Clínico (Sódio < 600mg)",
-              log_pediatric_mode: "Modo Pediátrico: Restringindo bebidas estimulantes/alcoólicas",
-              log_hypertension: "Meta Rigorosa de Sódio para Hipertensão (< 300mg)",
-              log_diabetes_sugars: "Controle Glicêmico: Removendo açúcares refinados",
-              log_diabetes_gi: "Controle Glicêmico: Priorizando baixo/médio IG (removendo IG alto ≥ 70)",
+              log_clinical_mode:
+                "Limpando banco para Modo Clínico (Sódio < 600mg)",
+              log_pediatric_mode:
+                "Modo Pediátrico: Restringindo bebidas estimulantes/alcoólicas",
+              log_hypertension:
+                "Meta Rigorosa de Sódio para Hipertensão (< 300mg)",
+              log_diabetes_sugars:
+                "Controle Glicêmico: Removendo açúcares refinados",
+              log_diabetes_gi:
+                "Controle Glicêmico: Priorizando baixo/médio IG (removendo IG alto ≥ 70)",
               log_renal: "Proteção Renal: Sódio ultra-baixo (< 200mg)",
-              log_hepatic: "Esteatose Hepática: Restringindo gorduras saturadas/óleos",
+              log_hepatic:
+                "Esteatose Hepática: Restringindo gorduras saturadas/óleos",
               warn_high_sodium: "Sódio elevado",
               warn_moderate_gi: "Carga glicêmica moderada",
               and: "e",
               healthy_preparation: "preparação saudável",
-            }
-          }
-        }
-      }
+            },
+          },
+        },
+      },
     });
   });
   const defaultParams = {
@@ -94,7 +109,9 @@ describe("dietAlgorithmService", () => {
     });
 
     // Decision log should record lactose restriction
-    const lactoseLog = result.decisionLog.find((log) => log.tag === "lactose_free");
+    const lactoseLog = result.decisionLog.find(
+      (log) => log.tag === "lactose_free",
+    );
     expect(lactoseLog).toBeDefined();
     expect(lactoseLog?.type).toBe("filter");
   });
@@ -117,7 +134,9 @@ describe("dietAlgorithmService", () => {
       });
     });
 
-    const clinicalLog = result.decisionLog.find((log) => log.tag === "clinical");
+    const clinicalLog = result.decisionLog.find(
+      (log) => log.tag === "clinical",
+    );
     expect(clinicalLog).toBeDefined();
   });
 
@@ -138,7 +157,9 @@ describe("dietAlgorithmService", () => {
       });
     });
 
-    const hyperLog = result.decisionLog.find((log) => log.tag === "hypertension");
+    const hyperLog = result.decisionLog.find(
+      (log) => log.tag === "hypertension",
+    );
     expect(hyperLog).toBeDefined();
   });
 
@@ -162,25 +183,72 @@ describe("dietAlgorithmService", () => {
       });
     });
 
-    const diabetesLog = result.decisionLog.find((log) => log.tag === "diabetes_gi");
+    const diabetesLog = result.decisionLog.find(
+      (log) => log.tag === "diabetes_gi",
+    );
     expect(diabetesLog).toBeDefined();
   });
 
-  it("should scale portion sizes to fit meal target calories", () => {
-    // 30% calorie target for Breakfast = 600 kcal.
-    // 40% calorie target for Lunch = 800 kcal.
-    const result = generateAlgorithmicDietPlan(defaultParams);
+  it("should enforce renal (CKD) ultra-low sodium limit (< 200mg)", () => {
+    const params = {
+      ...defaultParams,
+      clinicalTags: ["renal_ckd" as const],
+    };
 
-    const breakfastCalories = result.meals[0].calories;
-    const lunchCalories = result.meals[1].calories;
+    const result = generateAlgorithmicDietPlan(params);
 
-    // Breakfast calories should be roughly close to 600 kcal (with a reasonable scaling buffer)
-    expect(breakfastCalories).toBeGreaterThan(150);
-    expect(breakfastCalories).toBeLessThan(1200);
+    result.meals.forEach((meal) => {
+      meal.mainOption.items?.forEach((item) => {
+        const originalFood = brazilianFoods.find((f) => f.name === item.name);
+        if (originalFood) {
+          expect(originalFood.sodium).toBeLessThan(200);
+        }
+      });
+    });
 
-    // Lunch calories should be roughly close to 800 kcal
-    expect(lunchCalories).toBeGreaterThan(200);
-    expect(lunchCalories).toBeLessThan(1600);
+    const renalLog = result.decisionLog.find((log) => log.tag === "renal_ckd");
+    expect(renalLog).toBeDefined();
+  });
+
+  it("should restrict saturated fats for hepatic steatosis (only olive oil allowed)", () => {
+    const params = {
+      ...defaultParams,
+      clinicalTags: ["hepatic_steatosis" as const],
+    };
+
+    const result = generateAlgorithmicDietPlan(params);
+
+    result.meals.forEach((meal) => {
+      meal.mainOption.items?.forEach((item) => {
+        const originalFood = brazilianFoods.find((f) => f.name === item.name);
+        if (originalFood && originalFood.category === "Óleos e Gorduras") {
+          // The only fat source allowed in this category is olive oil ("azeite")
+          expect(originalFood.name.toLowerCase()).toContain("azeite");
+        }
+      });
+    });
+
+    const hepaticLog = result.decisionLog.find(
+      (log) => log.tag === "hepatic_steatosis",
+    );
+    expect(hepaticLog).toBeDefined();
+  });
+
+  it("should keep total meal calories close to the daily target (calorie scaling)", () => {
+    // Regression guard for the calorie-scaling fix. Food selection is random and
+    // the scale factor is clamped to [0.25, 4], so a single run can occasionally
+    // diverge on an unlucky draw. We therefore assert on the MEDIAN deviation
+    // across many runs, which reliably reflects that scaling converges to target.
+    const target = defaultParams.nutritionalTargets.calories;
+    const deviations: number[] = [];
+    for (let i = 0; i < 25; i++) {
+      const result = generateAlgorithmicDietPlan(defaultParams);
+      const total = result.meals.reduce((sum, m) => sum + m.calories, 0);
+      deviations.push(Math.abs(total - target) / target);
+    }
+    deviations.sort((a, b) => a - b);
+    const median = deviations[Math.floor(deviations.length / 2)];
+    expect(median).toBeLessThan(0.15); // typical run lands within 15% of target
   });
 
   it("should return general observations list", () => {

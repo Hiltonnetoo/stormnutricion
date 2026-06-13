@@ -10,7 +10,7 @@ import {
   googleProvider,
 } from "../services/firebaseService";
 import {
-  UtensilsIcon,
+  LogoIcon,
   EyeIcon,
   EyeOffIcon,
   GoogleIcon,
@@ -22,17 +22,32 @@ import { Button, Input } from "../components/ui";
 const getFriendlyErrorMessage = (errorCode: string, t: TFunction) => {
   switch (errorCode) {
     case "auth/email-already-in-use":
-      return t("register.error_email_in_use", "Este e-mail já está em uso por outra conta.");
+      return t(
+        "register.error_email_in_use",
+        "Este e-mail já está em uso por outra conta.",
+      );
     case "auth/invalid-email":
       return t("login.error_invalid_email", "O formato do e-mail é inválido.");
     case "auth/weak-password":
-      return t("register.error_weak_password", "A senha é muito fraca. A senha deve ter no mínimo 6 caracteres.");
+      return t(
+        "register.error_weak_password",
+        "A senha é muito fraca. A senha deve ter no mínimo 6 caracteres.",
+      );
     case "auth/unauthorized-domain":
-      return t("login.error_unauthorized_domain", "Erro de Domínio: Este domínio não está autorizado no Firebase.");
+      return t(
+        "login.error_unauthorized_domain",
+        "Erro de Domínio: Este domínio não está autorizado no Firebase.",
+      );
     case "auth/popup-closed-by-user":
-      return t("login.error_popup_closed", "O cadastro com Google foi cancelado.");
+      return t(
+        "login.error_popup_closed",
+        "O cadastro com Google foi cancelado.",
+      );
     default:
-      return t("register.error_generic", "Ocorreu um erro ao criar a conta. Tente novamente.");
+      return t(
+        "register.error_generic",
+        "Ocorreu um erro ao criar a conta. Tente novamente.",
+      );
   }
 };
 
@@ -64,7 +79,12 @@ const Register: React.FC = () => {
         await updateProfile(userCredential.user, { displayName });
       }
     } catch (err) {
-      setError(getFriendlyErrorMessage(err instanceof FirebaseError ? err.code : "", t));
+      setError(
+        getFriendlyErrorMessage(
+          err instanceof FirebaseError ? err.code : "",
+          t,
+        ),
+      );
     } finally {
       setLoading(false);
     }
@@ -76,7 +96,12 @@ const Register: React.FC = () => {
     try {
       await signInWithPopup(auth, googleProvider);
     } catch (err) {
-      setError(getFriendlyErrorMessage(err instanceof FirebaseError ? err.code : "", t));
+      setError(
+        getFriendlyErrorMessage(
+          err instanceof FirebaseError ? err.code : "",
+          t,
+        ),
+      );
     } finally {
       setLoading(false);
     }
@@ -84,12 +109,32 @@ const Register: React.FC = () => {
 
   const passwordStrength = () => {
     if (password.length === 0)
-      return { step: 0, color: "bg-slate-200", text: "", textColor: "text-slate-400" };
+      return {
+        step: 0,
+        color: "bg-slate-200",
+        text: "",
+        textColor: "text-slate-400",
+      };
     if (password.length < 6)
-      return { step: 1, color: "bg-rose-500", text: t("register.password_strength_weak"), textColor: "text-rose-600" };
+      return {
+        step: 1,
+        color: "bg-rose-500",
+        text: t("register.password_strength_weak"),
+        textColor: "text-rose-600",
+      };
     if (password.length < 10)
-      return { step: 2, color: "bg-amber-500", text: t("register.password_strength_medium"), textColor: "text-amber-600" };
-    return { step: 3, color: "bg-emerald-500", text: t("register.password_strength_strong"), textColor: "text-emerald-600" };
+      return {
+        step: 2,
+        color: "bg-amber-500",
+        text: t("register.password_strength_medium"),
+        textColor: "text-amber-600",
+      };
+    return {
+      step: 3,
+      color: "bg-emerald-500",
+      text: t("register.password_strength_strong"),
+      textColor: "text-emerald-600",
+    };
   };
 
   const strength = passwordStrength();
@@ -103,7 +148,7 @@ const Register: React.FC = () => {
     >
       <div className="text-center mb-8">
         <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-sage-50 text-sage-600 mb-6 shadow-glow">
-          <UtensilsIcon className="h-7 w-7" />
+          <LogoIcon className="h-7 w-7" />
         </div>
         <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
           {t("register.title")}
@@ -156,7 +201,11 @@ const Register: React.FC = () => {
                 className="text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-pointer"
                 aria-label={passwordVisible ? "Ocultar senha" : "Mostrar senha"}
               >
-                {passwordVisible ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+                {passwordVisible ? (
+                  <EyeOffIcon className="h-5 w-5" />
+                ) : (
+                  <EyeIcon className="h-5 w-5" />
+                )}
               </button>
             }
           />
@@ -186,14 +235,22 @@ const Register: React.FC = () => {
           </div>
         )}
 
-        <Button type="submit" loading={loading} fullWidth size="lg" className="cursor-pointer">
+        <Button
+          type="submit"
+          loading={loading}
+          fullWidth
+          size="lg"
+          className="cursor-pointer"
+        >
           {t("register.submit")}
         </Button>
       </form>
 
       <div className="my-6 flex items-center gap-4">
         <span className="h-px flex-1 bg-slate-200" />
-        <span className="text-xs font-medium text-slate-400">{t("register.or_register_with")}</span>
+        <span className="text-xs font-medium text-slate-400">
+          {t("register.or_register_with")}
+        </span>
         <span className="h-px flex-1 bg-slate-200" />
       </div>
 

@@ -2,11 +2,12 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper functions
+    // ----------------------------------------------------------------- Helpers
     function isAuthenticated() {
       return request.auth != null;
     }
 
+    // The nutritionist owns the workspace under /users/{userId}.
     function isNutritionist(userId) {
       return isAuthenticated() && request.auth.uid == userId;
     }
@@ -15,54 +16,86 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/patientProfiles/$(request.auth.uid)).data;
     }
 
-    function isAssociatedPatient(userId, patientId) {
+    function hasPatientProfile() {
       return isAuthenticated() &&
-        exists(/databases/$(database)/documents/patientProfiles/$(request.auth.uid)) &&
+        exists(/databases/$(database)/documents/patientProfiles/$(request.auth.uid));
+    }
+
+    // True when the signed-in patient is the one linked to
+    // users/{userId}/patients/{patientId}.
+    function isAssociatedPatient(userId, patientId) {
+      return hasPatientProfile() &&
         getPatientProfile().nutritionistId == userId &&
         getPatientProfile().patientId == patientId;
     }
 
-    // Rules for patientProfiles collection
-    match /patientProfiles/{profileId} {
-      allow read: if isAuthenticated() && (request.auth.uid == profileId || resource.data.nutritionistId == request.auth.uid);
-      allow create: if isAuthenticated() && (request.auth.uid == profileId || request.resource.data.nutritionistId == request.auth.uid);
-      allow update, delete: if isAuthenticated() && (resource.data.nutritionistId == request.auth.uid);
+    // True when the signed-in patient owns a document (diet/appointment) under
+    // users/{userId}, matched by the document's patientId field.
+    function isOwnerPatientByField(userId) {
+      return hasPatientProfile() &&
+        getPatientProfile().nutritionistId == userId &&
+        resource.data.patientId == getPatientProfile().patientId;
     }
 
-    // Rules for users collection and its subcollections
+    // Fields a patient is allowed to change on their own record (self-service).
+    // Everything else (clinical tags, goals, contact, etc.) is nutritionist-only.
+    function patientWriteIsSelfServiceOnly() {
+      return request.resource.data.diff(resource.data).affectedKeys()
+        .hasOnly([
+          'weight',
+          'weightHistory',
+          'selfEvaluations',
+          'adherenceLog',
+          'activeProtocolId'
+        ]);
+    }
+
+    // ------------------------------------------------------ patientProfiles
+    match /patientProfiles/{profileId} {
+      // The profile owner (patient) and the linked nutritionist can read it.
+      allow read: if isAuthenticated() &&
+        (request.auth.uid == profileId || resource.data.nutritionistId == request.auth.uid);
+      // Only the nutritionist creating the link may create the profile.
+      allow create: if isAuthenticated() &&
+        request.resource.data.nutritionistId == request.auth.uid;
+      // Only the linked nutritionist can update/delete it.
+      allow update, delete: if isAuthenticated() &&
+        resource.data.nutritionistId == request.auth.uid;
+    }
+
+    // ------------------------------------------------------ users workspace
     match /users/{userId} {
-      // Nutritionists own their userId document workspace (though the document itself might not exist)
+      // Nutritionist owns their own workspace document.
       allow read, write: if isNutritionist(userId);
 
       match /patients/{patientId} {
-        // Nutritionist has full access
+        // Nutritionist has full access to their patients.
         allow read, write: if isNutritionist(userId);
-        
-        // Associated patient can read and update their own patient record (for weight logging, self-evaluation, adherence)
-        allow read, update: if isAssociatedPatient(userId, patientId);
+
+        // The associated patient may read their own record...
+        allow read: if isAssociatedPatient(userId, patientId);
+        // ...and update ONLY self-service fields (weight, self-eval, adherence).
+        allow update: if isAssociatedPatient(userId, patientId) &&
+          patientWriteIsSelfServiceOnly();
       }
 
       match /diets/{dietId} {
-        // Nutritionist has full access
         allow read, write: if isNutritionist(userId);
-
-        // Associated patient can read their own diets
-        allow read: if isAuthenticated() &&
-          exists(/databases/$(database)/documents/patientProfiles/$(request.auth.uid)) &&
-          getPatientProfile().nutritionistId == userId &&
-          resource.data.patientId == getPatientProfile().patientId;
+        // The associated patient may read only their own diets.
+        allow read: if isOwnerPatientByField(userId);
       }
 
       match /appointments/{apptId} {
-        // Nutritionist has full access
         allow read, write: if isNutritionist(userId);
-
-        // Associated patient can read their own appointments
-        allow read: if isAuthenticated() &&
-          exists(/databases/$(database)/documents/patientProfiles/$(request.auth.uid)) &&
-          getPatientProfile().nutritionistId == userId &&
-          resource.data.patientId == getPatientProfile().patientId;
+        // The associated patient may read only their own appointments.
+        allow read: if isOwnerPatientByField(userId);
       }
+    }
+
+    // ------------------------------------------------------ default deny
+    // Anything not matched above is denied. Explicit for clarity/auditing.
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

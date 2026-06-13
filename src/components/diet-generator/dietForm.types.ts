@@ -1,13 +1,13 @@
 import type { DietMode, ClinicalTag, LabTest } from "../../types";
 
-/** Distribuição percentual de macronutrientes. */
+/** Macronutrient percentage distribution. */
 export interface MacroSplit {
   protein: number;
   carbs: number;
   fat: number;
 }
 
-/** Uma refeição configurada no plano (nome, horário e % calórico do dia). */
+/** A configured meal slot in the plan (name, time, and daily calorie %). */
 export interface MealSlot {
   name: string;
   time: string;
@@ -15,10 +15,10 @@ export interface MealSlot {
 }
 
 /**
- * Estado do formulário do Gerador de Dietas. É preenchido de forma incremental
- * (por isso os campos são opcionais) e alguns campos vêm de inputs como texto,
- * por isso aceitam `string | number`. As conversões numéricas são feitas na
- * leitura (Number(...)).
+ * Diet Generator form state. It is filled in incrementally
+ * (which is why fields are optional) and some fields come from text inputs,
+ * so they accept `string | number`. Numeric conversions are done when
+ * reading (Number(...)).
  */
 export interface DietFormData {
   goal?: string;
@@ -41,7 +41,7 @@ export interface DietFormData {
   mealsPerDay?: number;
 }
 
-/** Resultado dos cálculos metabólicos derivados do paciente + formulário. */
+/** Result of metabolic calculations derived from patient + form. */
 export interface DietCalculations {
   bmr: number;
   tdee: number;

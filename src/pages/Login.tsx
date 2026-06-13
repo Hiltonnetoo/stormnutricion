@@ -10,7 +10,12 @@ import {
   googleProvider,
   auth,
 } from "../services/firebaseService";
-import { UtensilsIcon, GoogleIcon, ShieldIcon, CheckCircleIcon } from "../components/icons";
+import {
+  LogoIcon,
+  GoogleIcon,
+  ShieldIcon,
+  CheckCircleIcon,
+} from "../components/icons";
 import AuthLayout from "../components/AuthLayout";
 import { Button, Input } from "../components/ui";
 
@@ -25,15 +30,30 @@ const getFriendlyErrorMessage = (errorCode: string, t: TFunction) => {
     case "auth/user-not-found":
     case "auth/wrong-password":
     case "auth/invalid-credential":
-      return t("login.error_wrong_credentials", "E-mail ou senha incorretos. Verifique suas credenciais.");
+      return t(
+        "login.error_wrong_credentials",
+        "E-mail ou senha incorretos. Verifique suas credenciais.",
+      );
     case "auth/user-disabled":
-      return t("login.error_user_disabled", "Esta conta de usuário foi desabilitada.");
+      return t(
+        "login.error_user_disabled",
+        "Esta conta de usuário foi desabilitada.",
+      );
     case "auth/unauthorized-domain":
-      return t("login.error_unauthorized_domain", "Erro de Domínio: Este domínio não está autorizado no Firebase.");
+      return t(
+        "login.error_unauthorized_domain",
+        "Erro de Domínio: Este domínio não está autorizado no Firebase.",
+      );
     case "auth/popup-closed-by-user":
       return t("login.error_popup_closed", "O login com Google foi cancelado.");
     default:
-      return errorCode ? t("login.error_generic", `Erro no login (${errorCode}). Tente novamente.`, { code: errorCode }) : null;
+      return errorCode
+        ? t(
+            "login.error_generic",
+            `Erro no login (${errorCode}). Tente novamente.`,
+            { code: errorCode },
+          )
+        : null;
   }
 };
 
@@ -53,7 +73,12 @@ const Login: React.FC<LoginProps> = ({ isPatient = false }) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
-      setError(getFriendlyErrorMessage(err instanceof FirebaseError ? err.code : "", t));
+      setError(
+        getFriendlyErrorMessage(
+          err instanceof FirebaseError ? err.code : "",
+          t,
+        ),
+      );
     } finally {
       setLoading(false);
     }
@@ -66,7 +91,12 @@ const Login: React.FC<LoginProps> = ({ isPatient = false }) => {
     try {
       await signInWithPopup(auth, googleProvider);
     } catch (err) {
-      setError(getFriendlyErrorMessage(err instanceof FirebaseError ? err.code : "", t));
+      setError(
+        getFriendlyErrorMessage(
+          err instanceof FirebaseError ? err.code : "",
+          t,
+        ),
+      );
     } finally {
       setLoading(false);
     }
@@ -83,7 +113,12 @@ const Login: React.FC<LoginProps> = ({ isPatient = false }) => {
       await sendPasswordResetEmail(auth, email);
       setInfo(t("login.forgot_password_success"));
     } catch (err) {
-      setError(getFriendlyErrorMessage(err instanceof FirebaseError ? err.code : "", t));
+      setError(
+        getFriendlyErrorMessage(
+          err instanceof FirebaseError ? err.code : "",
+          t,
+        ),
+      );
     }
   };
 
@@ -91,19 +126,17 @@ const Login: React.FC<LoginProps> = ({ isPatient = false }) => {
     <AuthLayout
       tone={isPatient ? "teal" : "sage"}
       panelTitle={
-        isPatient
-          ? t("login.patient_desc")
-          : t("login.professional_desc")
+        isPatient ? t("login.patient_desc") : t("login.professional_desc")
       }
       panelText={
-        isPatient
-          ? t("login.patient_sub")
-          : t("login.professional_sub")
+        isPatient ? t("login.patient_sub") : t("login.professional_sub")
       }
       highlights={
         isPatient
           ? undefined
-          : (t("login.professional_highlights", { returnObjects: true }) as string[])
+          : (t("login.professional_highlights", {
+              returnObjects: true,
+            }) as string[])
       }
     >
       <div className="text-center mb-9">
@@ -112,7 +145,7 @@ const Login: React.FC<LoginProps> = ({ isPatient = false }) => {
             isPatient ? "bg-teal-50 text-teal-600" : "bg-sage-50 text-sage-600"
           }`}
         >
-          <UtensilsIcon className="h-7 w-7" />
+          <LogoIcon className="h-7 w-7" />
         </div>
         <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
           {isPatient ? t("login.patient_title") : t("login.professional_title")}
@@ -139,7 +172,10 @@ const Login: React.FC<LoginProps> = ({ isPatient = false }) => {
 
         <div>
           <div className="flex justify-between items-center mb-1.5">
-            <label htmlFor="password" className="text-sm font-semibold text-slate-700">
+            <label
+              htmlFor="password"
+              className="text-sm font-semibold text-slate-700"
+            >
               {t("login.password")}
             </label>
             <button
@@ -183,7 +219,11 @@ const Login: React.FC<LoginProps> = ({ isPatient = false }) => {
           loading={loading}
           fullWidth
           size="lg"
-          className={isPatient ? "bg-teal-600 hover:bg-teal-700 shadow-teal-600/25 cursor-pointer" : "cursor-pointer"}
+          className={
+            isPatient
+              ? "bg-teal-600 hover:bg-teal-700 shadow-teal-600/25 cursor-pointer"
+              : "cursor-pointer"
+          }
         >
           {t("login.submit")}
         </Button>
@@ -193,7 +233,9 @@ const Login: React.FC<LoginProps> = ({ isPatient = false }) => {
         <>
           <div className="my-6 flex items-center gap-4">
             <span className="h-px flex-1 bg-slate-200" />
-            <span className="text-xs font-medium text-slate-400">{t("login.or_continue_with")}</span>
+            <span className="text-xs font-medium text-slate-400">
+              {t("login.or_continue_with")}
+            </span>
             <span className="h-px flex-1 bg-slate-200" />
           </div>
           <Button

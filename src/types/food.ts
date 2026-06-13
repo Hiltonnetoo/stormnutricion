@@ -1,22 +1,23 @@
 import type { Micronutrients } from "./diet";
 
 /**
- * Classificação NOVA (Guia Alimentar para a População Brasileira):
- * 1 = in natura / minimamente processado
- * 2 = ingrediente culinário processado
- * 3 = alimento processado
- * 4 = ultraprocessado
+ * NOVA Classification (Dietary Guidelines for the Brazilian Population):
+ * 1 = minimally processed / in natura
+ * 2 = processed culinary ingredient
+ * 3 = processed food
+ * 4 = ultra-processed
  *
- * Alimentos NOVA 4 são excluídos da geração automática de dietas.
+ * NOVA 4 foods are excluded from automatic diet generation.
  */
 export type NovaGroup = 1 | 2 | 3 | 4;
 
 /**
- * Representa um alimento do banco de dados nutricional.
+ * Represents a food in the nutritional database.
  */
 export interface Food {
   id: string;
   name: string;
+  nameEn?: string;
   category: string;
   portion: string;
   unit: string;
@@ -27,7 +28,7 @@ export interface Food {
   fiber: number;
   sodium: number;
   glycemicIndex?: number;
-  /** Grupo NOVA. Se ausente, é inferido por categoria/nome em foodService. */
+  /** NOVA group. If absent, it is inferred by category/name in foodService. */
   novaGroup?: NovaGroup;
   micros?: Micronutrients;
 }

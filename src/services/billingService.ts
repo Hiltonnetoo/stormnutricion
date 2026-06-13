@@ -1,12 +1,12 @@
 /**
- * Serviço de assinatura/faturamento.
+ * Subscription/billing service.
  *
- * Hoje o estado é persistido localmente (localStorage) para que a tela de
- * "Plano & Faturamento" seja totalmente funcional sem backend. Os pontos
- * marcados com TODO(stripe) são onde a integração real com o Stripe entra:
- * cada ação (mudar de plano, trocar cartão, cancelar) deve, em produção,
- * abrir uma sessão do Stripe Customer Portal / Checkout via Cloud Function,
- * e o estado abaixo passa a ser hidratado por webhook no Firestore.
+ * Currently, the state is persisted locally (localStorage) so that the
+ * "Plan & Billing" screen is fully functional without a backend. The points
+ * marked with TODO(stripe) are where the actual integration with Stripe goes:
+ * each action (change plan, swap card, cancel) should, in production,
+ * open a Stripe Customer Portal / Checkout session via Cloud Function,
+ * and the state below is then hydrated via webhook in Firestore.
  */
 
 export type PlanTier = "free" | "pro" | "clinic";
@@ -15,9 +15,9 @@ export type SubscriptionStatus = "active" | "canceled";
 export interface PlanDef {
   tier: PlanTier;
   name: string;
-  priceLabel: string; // exibição
-  priceValue: number; // BRL/mês
-  patientLimit: number | null; // null = ilimitado
+  priceLabel: string; // display label
+  priceValue: number; // BRL/month
+  patientLimit: number | null; // null = unlimited
   tagline: string;
   features: string[];
 }
@@ -25,16 +25,16 @@ export interface PlanDef {
 export const PLANS: Record<PlanTier, PlanDef> = {
   free: {
     tier: "free",
-    name: "Gratuito",
+    name: "Free",
     priceLabel: "R$ 0",
     priceValue: 0,
     patientLimit: 5,
-    tagline: "Para experimentar a plataforma",
+    tagline: "To try the platform",
     features: [
-      "Até 5 pacientes",
-      "3 dietas por mês",
-      "Cálculos metabólicos",
-      "PDF do plano (sem sua marca)",
+      "Up to 5 patients",
+      "3 diets per month",
+      "Metabolic calculations",
+      "Plan PDF (unbranded)",
     ],
   },
   pro: {
@@ -43,29 +43,29 @@ export const PLANS: Record<PlanTier, PlanDef> = {
     priceLabel: "R$ 89",
     priceValue: 89,
     patientLimit: null,
-    tagline: "Para o nutricionista autônomo",
+    tagline: "For the independent nutritionist",
     features: [
-      "Pacientes ilimitados",
-      "Dietas ilimitadas",
-      "PDF com a identidade da sua clínica",
-      "Portal do paciente",
-      "Agenda completa",
-      "Suporte por e-mail",
+      "Unlimited patients",
+      "Unlimited diets",
+      "PDF with your clinic's identity",
+      "Patient portal",
+      "Complete calendar",
+      "Email support",
     ],
   },
   clinic: {
     tier: "clinic",
-    name: "Clínica",
+    name: "Clinic",
     priceLabel: "R$ 199",
     priceValue: 199,
     patientLimit: null,
-    tagline: "Para clínicas e equipes",
+    tagline: "For clinics and teams",
     features: [
-      "Tudo do plano Pro",
-      "Até 3 usuários",
-      "Relatórios avançados",
-      "Módulo de exames laboratoriais",
-      "Suporte prioritário",
+      "Everything in Pro",
+      "Up to 3 users",
+      "Advanced reports",
+      "Lab tests module",
+      "Priority support",
     ],
   },
 };
@@ -82,14 +82,14 @@ export interface Invoice {
 export interface PaymentMethod {
   brand: string;
   last4: string;
-  exp: string; // MM/AA
+  exp: string; // MM/YY
 }
 
 export interface BillingState {
   tier: PlanTier;
   status: SubscriptionStatus;
   startedAt: string; // ISO
-  renewsAt: string; // ISO — data da próxima cobrança / fim do acesso se cancelado
+  renewsAt: string; // ISO — date of next charge / end of access if canceled
   paymentMethod: PaymentMethod | null;
   invoices: Invoice[];
 }
@@ -130,7 +130,7 @@ export const getBillingState = (): BillingState => {
     const raw = localStorage.getItem(KEY);
     if (raw) return JSON.parse(raw) as BillingState;
   } catch {
-    /* ignora JSON inválido e recria abaixo */
+    /* ignore invalid JSON and recreate below */
   }
   const fresh = buildDefaultState();
   localStorage.setItem(KEY, JSON.stringify(fresh));
@@ -143,15 +143,15 @@ const save = (state: BillingState): BillingState => {
 };
 
 /**
- * Troca o plano da assinatura. (TODO(stripe): em produção, abrir o Checkout/
- * Customer Portal e aplicar a mudança via webhook em vez de localmente.)
+ * Swaps the subscription plan. (TODO(stripe): in production, open Checkout/
+ * Customer Portal and apply the change via webhook instead of locally.)
  */
 export const changePlan = (tier: PlanTier): BillingState => {
   const current = getBillingState();
   const now = new Date();
   const plan = PLANS[tier];
   const invoices = [...current.invoices];
-  // Registra uma "cobrança" da troca quando há valor e o plano muda.
+  // Registers a swap "charge" when there is a value and the plan changes.
   if (plan.priceValue > 0 && tier !== current.tier) {
     invoices.unshift({
       id: `inv_${now.getTime()}`,
@@ -169,13 +169,13 @@ export const changePlan = (tier: PlanTier): BillingState => {
   });
 };
 
-/** Cancela a assinatura mantendo acesso até a data de renovação. */
+/** Cancels the subscription retaining access until the renewal date. */
 export const cancelSubscription = (): BillingState => {
   const current = getBillingState();
   return save({ ...current, status: "canceled" });
 };
 
-/** Reativa uma assinatura cancelada. */
+/** Reactivates a canceled subscription. */
 export const reactivateSubscription = (): BillingState => {
   const current = getBillingState();
   return save({

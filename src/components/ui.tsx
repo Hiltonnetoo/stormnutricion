@@ -25,8 +25,7 @@ const buttonSizes: Record<ButtonSize, string> = {
   lg: "btn-lg",
 };
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   leftIcon?: React.ReactNode;
@@ -123,13 +122,7 @@ export const Card: React.FC<
 /* ============================================================================
    Badge
    ========================================================================== */
-type BadgeTone =
-  | "sage"
-  | "sky"
-  | "amber"
-  | "rose"
-  | "slate"
-  | "emerald";
+type BadgeTone = "sage" | "sky" | "amber" | "rose" | "slate" | "emerald";
 
 export const Badge: React.FC<
   React.HTMLAttributes<HTMLSpanElement> & { tone?: BadgeTone }
@@ -142,8 +135,7 @@ export const Badge: React.FC<
 /* ============================================================================
    Input
    ========================================================================== */
-export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   hint?: string;
   error?: string;
@@ -152,7 +144,10 @@ export interface InputProps
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ label, hint, error, leftIcon, rightSlot, className, id, ...props }, ref) => {
+  (
+    { label, hint, error, leftIcon, rightSlot, className, id, ...props },
+    ref,
+  ) => {
     const inputId = id || props.name;
     return (
       <div className="w-full">
@@ -176,7 +171,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               // .input-field na cascata (correção D1 — lupa sobre o texto).
               !!leftIcon && "!pl-11",
               !!rightSlot && "!pr-11",
-              error && "border-rose-400 focus:ring-rose-500/60 focus:border-rose-400",
+              error &&
+                "border-rose-400 focus:ring-rose-500/60 focus:border-rose-400",
               className,
             )}
             {...props}
@@ -227,7 +223,9 @@ export const PageHeader: React.FC<{
         )}
       </div>
     </div>
-    {actions && <div className="flex items-center gap-3 shrink-0">{actions}</div>}
+    {actions && (
+      <div className="flex items-center gap-3 shrink-0">{actions}</div>
+    )}
   </div>
 );
 
@@ -252,7 +250,9 @@ export const EmptyState: React.FC<{
         {icon}
       </div>
     )}
-    <h3 className="text-lg font-bold text-slate-900 dark:text-white">{title}</h3>
+    <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+      {title}
+    </h3>
     {description && (
       <p className="mt-1.5 max-w-sm text-sm text-slate-500 dark:text-slate-400">
         {description}
@@ -274,7 +274,16 @@ export const Modal: React.FC<{
   footer?: React.ReactNode;
   size?: "sm" | "md" | "lg" | "xl";
   icon?: React.ReactNode;
-}> = ({ open, onClose, title, description, children, footer, size = "md", icon }) => {
+}> = ({
+  open,
+  onClose,
+  title,
+  description,
+  children,
+  footer,
+  size = "md",
+  icon,
+}) => {
   React.useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -335,8 +344,18 @@ export const Modal: React.FC<{
               className="shrink-0 rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors dark:hover:bg-slate-800"
               aria-label="Fechar"
             >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>

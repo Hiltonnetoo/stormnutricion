@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../../contexts/AuthContext";
 import { getPatientsCount } from "../../services/firebaseService";
 import {
@@ -18,6 +19,7 @@ import { ConfirmationModal } from "../modals/PatientModal";
 import { CheckCircleIcon, CreditCardIcon, DownloadIcon } from "../icons";
 
 const BillingSection: React.FC = () => {
+  const { t } = useTranslation();
   const { currentUser } = useAuth();
   const [billing, setBilling] = useState<BillingState>(() => getBillingState());
   const [patientCount, setPatientCount] = useState<number | null>(null);
@@ -47,30 +49,32 @@ const BillingSection: React.FC = () => {
     // TODO(stripe): abrir Checkout/Customer Portal; aqui aplicamos localmente.
     setBilling(changePlan(tier));
     setPendingTier(null);
-    flash(`Plano alterado para ${PLANS[tier].name}.`);
+    flash(t("billing.notice_changed", { name: PLANS[tier].name }));
   };
 
   const handleCancel = () => {
     setBilling(cancelSubscription());
     setConfirmCancel(false);
-    flash("Assinatura cancelada. Você mantém o acesso até a data de renovação.");
+    flash(t("billing.notice_canceled"));
   };
 
   const handleReactivate = () => {
     setBilling(reactivateSubscription());
-    flash("Assinatura reativada com sucesso!");
+    flash(t("billing.notice_reactivated"));
   };
 
   const handleManagePayment = () => {
     // TODO(stripe): redirect para stripe.billingPortal.sessions.create({ customer }).
-    flash("Em produção isso abre o portal seguro do Stripe para trocar o cartão.");
+    flash(t("billing.notice_card_stripe"));
   };
 
   return (
     <>
       <Card className="p-6">
-        <h2 className="text-lg font-bold text-slate-900 dark:text-white">Plano &amp; Faturamento</h2>
-        <p className="text-sm text-slate-500 mb-6">Gerencie sua assinatura, pagamento e notas.</p>
+        <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+          {t("billing.title")}
+        </h2>
+        <p className="text-sm text-slate-500 mb-6">{t("billing.subtitle")}</p>
 
         {notice && (
           <div className="mb-5 flex items-center gap-2 text-sm text-sage-700 bg-sage-50 border border-sage-100 rounded-xl p-3">
@@ -87,22 +91,33 @@ const BillingSection: React.FC = () => {
               </div>
               <div>
                 <p className="font-bold text-sage-900 dark:text-sage-100">
-                  Isanutri {plan.name}
+                  Storm Nutrition{" "}
+                  {t("home.pricing_" + billing.tier + "_title", {
+                    defaultValue: plan.name,
+                  })}
                   {plan.priceValue > 0 && (
-                    <span className="font-semibold text-sage-600"> · {plan.priceLabel}/mês</span>
+                    <span className="font-semibold text-sage-600">
+                      {" "}
+                      · {plan.priceLabel}
+                      {t("billing.per_month")}
+                    </span>
                   )}
                 </p>
                 <p className="text-xs text-sage-600 dark:text-sage-400">
                   {isCanceled
-                    ? `Cancelada · acesso até ${formatDate(billing.renewsAt)}`
-                    : `Renova em ${formatDate(billing.renewsAt)}`}
+                    ? t("billing.canceled_on", {
+                        date: formatDate(billing.renewsAt),
+                      })
+                    : t("billing.renews_on", {
+                        date: formatDate(billing.renewsAt),
+                      })}
                 </p>
               </div>
             </div>
             {isCanceled ? (
-              <Badge tone="amber">Cancelada</Badge>
+              <Badge tone="amber">{t("billing.canceled")}</Badge>
             ) : (
-              <Badge tone="emerald">Ativa</Badge>
+              <Badge tone="emerald">{t("billing.active")}</Badge>
             )}
           </div>
 
@@ -110,7 +125,7 @@ const BillingSection: React.FC = () => {
           {plan.patientLimit !== null && (
             <div className="mt-4">
               <div className="flex justify-between text-xs font-medium text-slate-500 mb-1.5">
-                <span>Pacientes</span>
+                <span>{t("billing.patients")}</span>
                 <span>
                   {patientCount ?? "—"} / {plan.patientLimit}
                 </span>
@@ -125,15 +140,22 @@ const BillingSection: React.FC = () => {
           )}
 
           {isCanceled && (
-            <Button variant="primary" size="sm" className="mt-4" onClick={handleReactivate}>
-              Reativar assinatura
+            <Button
+              variant="primary"
+              size="sm"
+              className="mt-4"
+              onClick={handleReactivate}
+            >
+              {t("billing.reactivate_btn")}
             </Button>
           )}
         </div>
 
         {/* Seletor de planos */}
         <div className="mt-6">
-          <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-3">Mudar de plano</p>
+          <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-3">
+            {t("billing.change_plan_title")}
+          </p>
           <div className="grid sm:grid-cols-3 gap-3">
             {PLAN_ORDER.map((tier) => {
               const p = PLANS[tier];
@@ -149,18 +171,27 @@ const BillingSection: React.FC = () => {
                       : "border-slate-200 dark:border-slate-700"
                   }`}
                 >
-                  <p className="font-bold text-slate-900 dark:text-white">{p.name}</p>
-                  <p className="text-xs text-slate-500 mb-2">{p.tagline}</p>
+                  <p className="font-bold text-slate-900 dark:text-white">
+                    {t("home.pricing_" + tier + "_title", {
+                      defaultValue: p.name,
+                    })}
+                  </p>
+                  <p className="text-xs text-slate-500 mb-2">
+                    {t("home.pricing_" + tier + "_tagline", {
+                      defaultValue: p.tagline,
+                    })}
+                  </p>
                   <p className="text-2xl font-extrabold text-slate-900 dark:text-white stat-number">
                     {p.priceLabel}
                     <span className="text-xs font-medium text-slate-400">
-                      {p.priceValue > 0 ? "/mês" : ""}
+                      {p.priceValue > 0 ? t("billing.per_month") : ""}
                     </span>
                   </p>
                   <div className="mt-auto pt-3">
                     {isCurrent ? (
                       <span className="inline-flex items-center gap-1.5 text-xs font-bold text-sage-700">
-                        <CheckCircleIcon className="w-4 h-4" /> Plano atual
+                        <CheckCircleIcon className="w-4 h-4" />{" "}
+                        {t("billing.current_plan")}
                       </span>
                     ) : (
                       <Button
@@ -169,7 +200,9 @@ const BillingSection: React.FC = () => {
                         fullWidth
                         onClick={() => setPendingTier(tier)}
                       >
-                        {isUpgrade ? "Fazer upgrade" : "Mudar para este"}
+                        {isUpgrade
+                          ? t("billing.upgrade_btn")
+                          : t("billing.downgrade_btn")}
                       </Button>
                     )}
                   </div>
@@ -181,7 +214,9 @@ const BillingSection: React.FC = () => {
 
         {/* Forma de pagamento */}
         <div className="mt-6">
-          <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-3">Forma de pagamento</p>
+          <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-3">
+            {t("billing.payment_method_title")}
+          </p>
           <div className="flex items-center justify-between gap-3 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500">
@@ -190,41 +225,51 @@ const BillingSection: React.FC = () => {
               {billing.paymentMethod ? (
                 <div>
                   <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-                    {billing.paymentMethod.brand} •••• {billing.paymentMethod.last4}
+                    {billing.paymentMethod.brand} ••••{" "}
+                    {billing.paymentMethod.last4}
                   </p>
-                  <p className="text-xs text-slate-400">Expira em {billing.paymentMethod.exp}</p>
+                  <p className="text-xs text-slate-400">
+                    Expira em {billing.paymentMethod.exp}
+                  </p>
                 </div>
               ) : (
-                <p className="text-sm text-slate-500">Nenhum cartão cadastrado</p>
+                <p className="text-sm text-slate-500">{t("billing.no_card")}</p>
               )}
             </div>
             <Button variant="secondary" size="sm" onClick={handleManagePayment}>
-              Trocar cartão
+              {t("billing.change_card_btn")}
             </Button>
           </div>
         </div>
 
         {/* Histórico de pagamentos */}
         <div className="mt-6">
-          <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-3">Histórico de pagamentos</p>
+          <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-3">
+            {t("billing.payment_history_title")}
+          </p>
           {billing.invoices.length === 0 ? (
-            <p className="text-sm text-slate-400">Nenhum pagamento registrado ainda.</p>
+            <p className="text-sm text-slate-400">{t("billing.no_payments")}</p>
           ) : (
             <div className="rounded-xl border border-slate-200 dark:border-slate-700 divide-y divide-slate-100 dark:divide-slate-800">
               {billing.invoices.map((inv) => (
-                <div key={inv.id} className="flex items-center justify-between gap-3 px-4 py-2.5">
+                <div
+                  key={inv.id}
+                  className="flex items-center justify-between gap-3 px-4 py-2.5"
+                >
                   <div>
                     <p className="text-sm font-medium text-slate-700 dark:text-slate-200">
                       {formatDate(inv.date)}
                     </p>
-                    <p className="text-xs text-emerald-600">Pago</p>
+                    <p className="text-xs text-emerald-600">
+                      {t("billing.paid")}
+                    </p>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-sm font-bold text-slate-800 dark:text-slate-100">
                       {formatBRL(inv.amount)}
                     </span>
                     <button
-                      onClick={() => flash("Em produção, o PDF da nota é baixado do Stripe.")}
+                      onClick={() => flash(t("billing.notice_pdf_stripe"))}
                       className="flex items-center gap-1 text-xs font-semibold text-sage-600 hover:text-sage-700"
                     >
                       <DownloadIcon className="w-4 h-4" /> NF
@@ -243,10 +288,10 @@ const BillingSection: React.FC = () => {
               onClick={() => setConfirmCancel(true)}
               className="text-sm font-semibold text-rose-600 hover:text-rose-700 transition-colors"
             >
-              Cancelar assinatura
+              {t("billing.cancel_btn")}
             </button>
             <p className="mt-1 text-xs text-slate-400">
-              Você mantém acesso a todos os recursos até o fim do período já pago.
+              {t("billing.cancel_desc")}
             </p>
           </div>
         )}
@@ -256,24 +301,40 @@ const BillingSection: React.FC = () => {
         isOpen={confirmCancel}
         onClose={() => setConfirmCancel(false)}
         onConfirm={handleCancel}
-        title="Cancelar assinatura"
-        message={`Sua assinatura do plano ${plan.name} será cancelada. Você continuará com acesso até ${formatDate(billing.renewsAt)} e não haverá novas cobranças.`}
-        confirmText="Confirmar cancelamento"
-        cancelText="Manter assinatura"
+        title={t("billing.cancel_confirm_title")}
+        message={t("billing.cancel_confirm_message", {
+          name: plan.name,
+          date: formatDate(billing.renewsAt),
+        })}
+        confirmText={t("billing.cancel_confirm_btn")}
+        cancelText={t("billing.cancel_keep_btn")}
       />
 
       <ConfirmationModal
         isOpen={pendingTier !== null}
         onClose={() => setPendingTier(null)}
         onConfirm={() => pendingTier && handleChangePlan(pendingTier)}
-        title={pendingTier ? `Mudar para o plano ${PLANS[pendingTier].name}` : ""}
-        message={
+        title={
           pendingTier
-            ? `Você passará para o plano ${PLANS[pendingTier].name} (${PLANS[pendingTier].priceLabel}${PLANS[pendingTier].priceValue > 0 ? "/mês" : ""}). A alteração entra em vigor imediatamente.`
+            ? t("billing.change_confirm_title", {
+                name: PLANS[pendingTier].name,
+              })
             : ""
         }
-        confirmText="Confirmar mudança"
-        cancelText="Voltar"
+        message={
+          pendingTier
+            ? t("billing.change_confirm_message", {
+                name: PLANS[pendingTier].name,
+                price: PLANS[pendingTier].priceLabel,
+                perMonth:
+                  PLANS[pendingTier].priceValue > 0
+                    ? t("billing.per_month")
+                    : "",
+              })
+            : ""
+        }
+        confirmText={t("billing.change_confirm_btn")}
+        cancelText={t("billing.change_back_btn")}
       />
     </>
   );

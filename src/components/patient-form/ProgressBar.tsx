@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface ProgressBarProps {
   currentStep: number;
@@ -8,68 +9,99 @@ interface ProgressBarProps {
 }
 
 const steps = [
-  { number: 1, title: "Pessoal" },
-  { number: 2, title: "Contato" },
-  { number: 3, title: "Profissional" },
-  { number: 4, title: "Nutricional" },
-  { number: 5, title: "Antropometria" },
-  { number: 6, title: "Exames" },
-  { number: 7, title: "Resumo" },
+  { number: 1, key: "personal" },
+  { number: 2, key: "contact" },
+  { number: 3, key: "professional" },
+  { number: 4, key: "nutritional" },
+  { number: 5, key: "anthropometric" },
+  { number: 6, key: "exams" },
+  { number: 7, key: "summary" },
 ];
 
 const CheckIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+  <svg
+    className={className}
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={3}
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M4.5 12.75l6 6 9-13.5"
+    />
   </svg>
 );
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep, goToStep, isEditMode = false }) => (
-  <nav aria-label="Progress">
-    <ol className="flex items-center">
-      {steps.map((step, stepIdx) => {
-        const isCompleted = step.number < currentStep;
-        const isActive = step.number === currentStep;
-        const canNavigate = isCompleted || isEditMode;
+const ProgressBar: React.FC<ProgressBarProps> = ({
+  currentStep,
+  goToStep,
+  isEditMode = false,
+}) => {
+  const { t } = useTranslation();
 
-        return (
-          <li key={step.title} className="relative flex-1">
-            {stepIdx < steps.length - 1 && (
-              <div className={`absolute left-1/2 top-4 h-0.5 w-full ${isCompleted ? "bg-sage-500" : "bg-slate-200 dark:bg-slate-700"}`} aria-hidden="true" />
-            )}
-            <button
-              onClick={() => canNavigate && goToStep(step.number)}
-              disabled={!canNavigate}
-              className={`relative z-10 flex flex-col items-center justify-center w-full ${canNavigate ? "cursor-pointer" : "cursor-default"}`}
-            >
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
-                  isCompleted
-                    ? "bg-sage-600 text-white shadow-md shadow-sage-600/25"
-                    : isActive
-                      ? "border-2 border-sage-500 bg-white dark:bg-slate-800"
-                      : "border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800"
-                }`}
+  return (
+    <nav aria-label="Progress">
+      <ol className="flex items-center">
+        {steps.map((step, stepIdx) => {
+          const isCompleted = step.number < currentStep;
+          const isActive = step.number === currentStep;
+          const canNavigate = isCompleted || isEditMode;
+
+          return (
+            <li key={step.key} className="relative flex-1">
+              {stepIdx < steps.length - 1 && (
+                <div
+                  className={`absolute left-1/2 top-4 h-0.5 w-full ${isCompleted ? "bg-sage-500" : "bg-slate-200 dark:bg-slate-700"}`}
+                  aria-hidden="true"
+                />
+              )}
+              <button
+                onClick={() => canNavigate && goToStep(step.number)}
+                disabled={!canNavigate}
+                className={`relative z-10 flex flex-col items-center justify-center w-full ${canNavigate ? "cursor-pointer" : "cursor-default"}`}
               >
-                {isCompleted ? (
-                  <CheckIcon className="w-4 h-4" />
-                ) : isActive ? (
-                  <>
-                    <span className="absolute h-5 w-5 rounded-full bg-sage-200 animate-ping" aria-hidden="true" />
-                    <span className="relative h-2.5 w-2.5 bg-sage-500 rounded-full" aria-hidden="true" />
-                  </>
-                ) : (
-                  <span className="text-slate-400 text-sm font-semibold">{step.number}</span>
-                )}
-              </div>
-              <p className={`mt-2 text-[11px] text-center font-semibold transition-colors hidden sm:block ${isActive ? "text-sage-600 dark:text-sage-300" : "text-slate-400"}`}>
-                {step.title}
-              </p>
-            </button>
-          </li>
-        );
-      })}
-    </ol>
-  </nav>
-);
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
+                    isCompleted
+                      ? "bg-sage-600 text-white shadow-md shadow-sage-600/25"
+                      : isActive
+                        ? "border-2 border-sage-500 bg-white dark:bg-slate-800"
+                        : "border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800"
+                  }`}
+                >
+                  {isCompleted ? (
+                    <CheckIcon className="w-4 h-4" />
+                  ) : isActive ? (
+                    <>
+                      <span
+                        className="absolute h-5 w-5 rounded-full bg-sage-200 animate-ping"
+                        aria-hidden="true"
+                      />
+                      <span
+                        className="relative h-2.5 w-2.5 bg-sage-500 rounded-full"
+                        aria-hidden="true"
+                      />
+                    </>
+                  ) : (
+                    <span className="text-slate-400 text-sm font-semibold">
+                      {step.number}
+                    </span>
+                  )}
+                </div>
+                <p
+                  className={`mt-2 text-[11px] text-center font-semibold transition-colors hidden sm:block ${isActive ? "text-sage-600 dark:text-sage-300" : "text-slate-400"}`}
+                >
+                  {t("patient_form.steps." + step.key)}
+                </p>
+              </button>
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  );
+};
 
 export default ProgressBar;

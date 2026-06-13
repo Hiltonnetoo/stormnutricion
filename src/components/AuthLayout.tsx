@@ -1,11 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  UtensilsIcon,
-  CheckCircleIcon,
-  StarIcon,
-} from "./icons";
+import { LogoIcon, CheckCircleIcon, StarIcon } from "./icons";
 import LanguageSelector from "./LanguageSelector";
 
 interface AuthLayoutProps {
@@ -39,7 +35,16 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
           onClick={() => navigate("/")}
           className="absolute top-7 left-6 sm:left-8 inline-flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-sage-600 transition-colors focus-ring rounded-lg px-1 py-1 cursor-pointer"
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="m15 18-6-6 6-6" />
           </svg>
           {t("common.back", "Voltar")}
@@ -70,10 +75,10 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
           {/* brand */}
           <div className="flex items-center gap-3">
             <div className="bg-white/15 backdrop-blur-sm p-2 rounded-xl border border-white/20">
-              <UtensilsIcon className="h-6 w-6 text-white" />
+              <LogoIcon className="h-6 w-6 text-white" />
             </div>
             <span className="text-xl font-extrabold tracking-tight">
-              Isanutri<span className="text-sage-200">.pro</span>
+              Storm <span className="text-sage-200">Nutrition</span>
             </span>
           </div>
 
@@ -118,7 +123,10 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
             {highlights && (
               <ul className="space-y-3">
                 {highlights.map((h) => (
-                  <li key={h} className="flex items-center gap-3 text-sage-50 font-medium">
+                  <li
+                    key={h}
+                    className="flex items-center gap-3 text-sage-50 font-medium"
+                  >
                     <CheckCircleIcon className="w-5 h-5 text-sage-200 shrink-0" />
                     {h}
                   </li>
@@ -128,7 +136,8 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
           </div>
 
           <p className="text-xs text-sage-200/80">
-            &copy; {new Date().getFullYear()} Isanutri · {t("home.footer_text")}
+            &copy; {new Date().getFullYear()} Storm Nutrition ·{" "}
+            {t("home.footer_text")}
           </p>
         </div>
       </div>

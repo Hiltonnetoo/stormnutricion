@@ -1,5 +1,6 @@
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import i18n from "../i18n";
 import type { DietPlan, Meal, MealOption } from "../types";
 
 function formatFileName(plan: DietPlan): string {
@@ -7,19 +8,19 @@ function formatFileName(plan: DietPlan): string {
   const date = new Date(plan.createdAt)
     .toLocaleDateString("pt-BR")
     .replace(/\//g, "-");
-  return `dieta-${patientName}-${date}.pdf`;
+  return `diet-${patientName}-${date}.pdf`;
 }
 
-// --- MODO 1: LAYOUT EDITORIAL (identidade visual Isanutri) ---
-// Paleta da marca convertida para RGB (espelha src/index.css).
+// --- MODE 1: EDITORIAL LAYOUT (Storm Nutrition visual identity) ---
+// Brand palette converted to RGB (mirrors src/index.css).
 type RGB = [number, number, number];
 const SAGE800: RGB = [17, 94, 89];
 const SAGE700: RGB = [15, 118, 110];
 const SAGE600: RGB = [13, 148, 136];
 const SAGE100: RGB = [204, 251, 241];
 const SAGE50: RGB = [240, 253, 250];
-const SKY: RGB = [2, 132, 199]; // carboidratos
-const AMBER: RGB = [217, 119, 6]; // gorduras
+const SKY: RGB = [2, 132, 199]; // carbohydrates
+const AMBER: RGB = [217, 119, 6]; // fats
 const INK: RGB = [15, 23, 42]; // slate-900
 const SUBTLE: RGB = [100, 116, 139]; // slate-500
 const FAINT: RGB = [148, 163, 184]; // slate-400
@@ -34,7 +35,7 @@ export const generateCustomLayoutPdf = async (plan: DietPlan) => {
   const contentWidth = pageWidth - margin * 2;
   let yPos = 0;
 
-  // Dados da clínica configurados em Configurações → Clínica & Marca.
+  // Clinic data configured in Settings → Clinic & Brand.
   const ls = typeof localStorage !== "undefined" ? localStorage : null;
   const clinicName = ls?.getItem("clinicName") || "";
   const clinicSpecialty = ls?.getItem("clinicSpecialty") || "";
@@ -47,7 +48,7 @@ export const generateCustomLayoutPdf = async (plan: DietPlan) => {
     }
   };
 
-  /* ---------------------------------------------- Cabeçalho (faixa da marca) */
+  /* ---------------------------------------------- Header (brand banner) */
   doc.setFillColor(...SAGE700);
   doc.rect(0, 0, pageWidth, 40, "F");
   doc.setFillColor(...SAGE800);
@@ -57,12 +58,12 @@ export const generateCustomLayoutPdf = async (plan: DietPlan) => {
   doc.setFont("helvetica", "bold");
   doc.setFontSize(9);
   doc.setCharSpace(1.5);
-  doc.text("ISANUTRI.PRO", margin, 15);
+  doc.text("STORM NUTRITION", margin, 15);
   doc.setCharSpace(0);
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(11);
-  doc.text(clinicName || "Plano Alimentar Personalizado", margin, 23);
+  doc.text(clinicName || i18n.t("pdf.personalized_plan"), margin, 23);
   if (clinicSpecialty) {
     doc.setFontSize(8);
     doc.setTextColor(...SAGE100);
@@ -72,12 +73,18 @@ export const generateCustomLayoutPdf = async (plan: DietPlan) => {
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(13);
-  doc.text("PLANO NUTRICIONAL", pageWidth - margin, 15, { align: "right" });
+  doc.text(i18n.t("pdf.nutritional_plan"), pageWidth - margin, 15, {
+    align: "right",
+  });
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
   doc.setTextColor(...SAGE100);
   doc.text(
-    `Emitido em ${new Date(plan.createdAt).toLocaleDateString("pt-BR")}`,
+    i18n.t("pdf.issued_on", {
+      date: new Date(plan.createdAt).toLocaleDateString(
+        i18n.language === "en" ? "en-US" : "pt-BR",
+      ),
+    }),
     pageWidth - margin,
     22,
     { align: "right" },
@@ -86,20 +93,29 @@ export const generateCustomLayoutPdf = async (plan: DietPlan) => {
 
   yPos = 54;
 
-  /* ------------------------------------------------------- Bloco do paciente */
+  /* ------------------------------------------------------- Patient Block */
   doc.setTextColor(...INK);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(18);
   doc.text(plan.patientName, margin, yPos);
   yPos += 7;
-  const startD = new Date(plan.startDate + "T00:00:00").toLocaleDateString("pt-BR");
+  const startD = new Date(plan.startDate + "T00:00:00").toLocaleDateString(
+    i18n.language === "en" ? "en-US" : "pt-BR",
+  );
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
   doc.setTextColor(...SUBTLE);
-  doc.text(`Plano de ${plan.durationDays} dias  ·  Início em ${startD}`, margin, yPos);
+  doc.text(
+    i18n.t("pdf.plan_duration_start", {
+      duration: plan.durationDays,
+      startDate: startD,
+    }),
+    margin,
+    yPos,
+  );
   yPos += 10;
 
-  /* -------------------------------------------------- Resumo nutricional */
+  /* -------------------------------------------------- Nutritional Summary */
   const cardH = 34;
   doc.setFillColor(...SAGE50);
   doc.setDrawColor(...SAGE100);
@@ -110,15 +126,31 @@ export const generateCustomLayoutPdf = async (plan: DietPlan) => {
   doc.setFontSize(8);
   doc.setTextColor(...SAGE700);
   doc.setCharSpace(0.8);
-  doc.text("RESUMO NUTRICIONAL DIÁRIO", margin + 6, yPos + 7);
+  doc.text(i18n.t("pdf.daily_summary"), margin + 6, yPos + 7);
   doc.setCharSpace(0);
 
   const m = plan.macronutrients;
   const cols: Array<{ v: string; sub: string; c: RGB }> = [
-    { v: `${plan.dailyCalories.toFixed(0)}`, sub: "Calorias · kcal", c: INK },
-    { v: `${m.proteinGrams.toFixed(0)}g`, sub: `Proteínas · ${m.proteinPercentage}%`, c: SAGE600 },
-    { v: `${m.carbsGrams.toFixed(0)}g`, sub: `Carboidratos · ${m.carbsPercentage}%`, c: SKY },
-    { v: `${m.fatGrams.toFixed(0)}g`, sub: `Gorduras · ${m.fatPercentage}%`, c: AMBER },
+    {
+      v: `${plan.dailyCalories.toFixed(0)}`,
+      sub: i18n.t("pdf.calories_kcal"),
+      c: INK,
+    },
+    {
+      v: `${m.proteinGrams.toFixed(0)}g`,
+      sub: i18n.t("pdf.proteins_pct", { pct: m.proteinPercentage }),
+      c: SAGE600,
+    },
+    {
+      v: `${m.carbsGrams.toFixed(0)}g`,
+      sub: i18n.t("pdf.carbs_pct", { pct: m.carbsPercentage }),
+      c: SKY,
+    },
+    {
+      v: `${m.fatGrams.toFixed(0)}g`,
+      sub: i18n.t("pdf.fats_pct", { pct: m.fatPercentage }),
+      c: AMBER,
+    },
   ];
   const colW = contentWidth / 4;
   cols.forEach((col, i) => {
@@ -133,7 +165,7 @@ export const generateCustomLayoutPdf = async (plan: DietPlan) => {
     doc.text(col.sub, cx, yPos + 23, { align: "center" });
   });
 
-  // Barra de distribuição de macros (proteína / carbo / gordura por kcal)
+  // Macro distribution bar (protein / carbs / fat by kcal)
   const pK = m.proteinGrams * 4;
   const cK = m.carbsGrams * 4;
   const fK = m.fatGrams * 9;
@@ -155,7 +187,7 @@ export const generateCustomLayoutPdf = async (plan: DietPlan) => {
   });
   yPos += cardH + 12;
 
-  /* ------------------------------------------------------ Plano de refeições */
+  /* ------------------------------------------------------ Meal Plan */
   const sectionTitle = (title: string) => {
     checkPageBreak(16);
     doc.setFont("helvetica", "bold");
@@ -169,7 +201,7 @@ export const generateCustomLayoutPdf = async (plan: DietPlan) => {
     yPos += 7;
   };
 
-  sectionTitle("Plano de Refeições");
+  sectionTitle(i18n.t("pdf.meal_plan"));
 
   const padX = 8;
   const innerW = contentWidth - padX * 2;
@@ -195,14 +227,14 @@ export const generateCustomLayoutPdf = async (plan: DietPlan) => {
 
     checkPageBreak(blockH + 4);
 
-    // Cartão da refeição + acento à esquerda
+    // Meal card + accent on the left
     doc.setFillColor(...PAPER);
     doc.roundedRect(margin, yPos, contentWidth, blockH, 3, 3, "F");
     doc.setFillColor(...SAGE600);
     doc.roundedRect(margin, yPos, 2.2, blockH, 1, 1, "F");
 
     let cy = yPos + 8;
-    // Nome + horário
+    // Name + time
     doc.setFont("helvetica", "bold");
     doc.setFontSize(11);
     doc.setTextColor(...INK);
@@ -213,7 +245,7 @@ export const generateCustomLayoutPdf = async (plan: DietPlan) => {
     doc.setTextColor(...FAINT);
     doc.text(`  ${meal.time}`, margin + padX + nameW, cy);
 
-    // Pílula de kcal à direita
+    // Kcal pill on the right
     const kcalStr = `${meal.calories.toFixed(0)} kcal`;
     doc.setFont("helvetica", "bold");
     doc.setFontSize(8);
@@ -225,12 +257,12 @@ export const generateCustomLayoutPdf = async (plan: DietPlan) => {
     doc.text(kcalStr, pillX + pillW / 2, cy, { align: "center" });
 
     cy += 7;
-    // Opção principal
+    // Main option
     doc.setFont("helvetica", "bold");
     doc.setFontSize(7.5);
     doc.setTextColor(...SAGE700);
     doc.setCharSpace(0.5);
-    doc.text("OPÇÃO PRINCIPAL", margin + padX, cy);
+    doc.text(i18n.t("pdf.main_option"), margin + padX, cy);
     doc.setCharSpace(0);
     cy += 4.5;
     doc.setFont("helvetica", "normal");
@@ -245,7 +277,7 @@ export const generateCustomLayoutPdf = async (plan: DietPlan) => {
       doc.setFontSize(7.5);
       doc.setTextColor(...SUBTLE);
       doc.setCharSpace(0.5);
-      doc.text("ALTERNATIVAS", margin + padX, cy);
+      doc.text(i18n.t("pdf.alternatives"), margin + padX, cy);
       doc.setCharSpace(0);
       cy += 4.5;
       doc.setFont("helvetica", "normal");
@@ -262,14 +294,16 @@ export const generateCustomLayoutPdf = async (plan: DietPlan) => {
     yPos += blockH + 5;
   });
 
-  /* -------------------------------------------------- Recomendações gerais */
+  /* -------------------------------------------------- General Recommendations */
   const obs = [
     ...(plan.generalObservations || []),
-    `Beba aproximadamente ${(plan.waterRecommendationLiters || 2).toFixed(1)} litros de água por dia.`,
+    i18n.t("pdf.water_recommendation", {
+      liters: (plan.waterRecommendationLiters || 2).toFixed(1),
+    }),
   ];
   if (obs.length > 0) {
     yPos += 4;
-    sectionTitle("Recomendações Gerais");
+    sectionTitle(i18n.t("pdf.general_recommendations"));
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
     obs.forEach((o) => {
@@ -283,11 +317,11 @@ export const generateCustomLayoutPdf = async (plan: DietPlan) => {
     });
   }
 
-  /* ---------------------------------------------------- Rodapé (toda página) */
+  /* ---------------------------------------------------- Footer (every page) */
   const pageCount = doc.getNumberOfPages();
   const footerLeft = clinicName
     ? `${clinicName}${clinicPhone ? "  ·  " + clinicPhone : ""}`
-    : "Isanutri · Gestão Nutricional";
+    : "Storm Nutrition · Gestão Nutricional";
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
     doc.setDrawColor(...HAIR);
@@ -297,14 +331,21 @@ export const generateCustomLayoutPdf = async (plan: DietPlan) => {
     doc.setFontSize(8);
     doc.setTextColor(...FAINT);
     doc.text(footerLeft, margin, pageHeight - 7);
-    doc.text("Gerado pelo Isanutri", pageWidth / 2, pageHeight - 7, { align: "center" });
-    doc.text(`Página ${i} de ${pageCount}`, pageWidth - margin, pageHeight - 7, { align: "right" });
+    doc.text(i18n.t("pdf.generated_by"), pageWidth / 2, pageHeight - 7, {
+      align: "center",
+    });
+    doc.text(
+      i18n.t("pdf.page_of", { page: i, total: pageCount }),
+      pageWidth - margin,
+      pageHeight - 7,
+      { align: "right" },
+    );
   }
 
   doc.save(formatFileName(plan));
 };
 
-// --- MODO 2: CAPTURA DE TELA ---
+// --- MODE 2: SCREENSHOT CAPTURE ---
 export const generateScreenshotPdf = async (
   element: HTMLElement,
   plan: DietPlan,

@@ -1,6 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
+import "../../i18n";
 import MealOptionTable from "../MealOptionTable";
 import type { MealOption } from "../../types";
 
@@ -71,18 +72,20 @@ describe("MealOptionTable Component", () => {
         mainOption={mockMainOption}
         alternatives={[]}
         accentColor="sage"
-      />
+      />,
     );
 
     // Should display main option header
-    expect(screen.getByText("Opção Principal")).toBeInTheDocument();
+    expect(screen.getByText("Main Option")).toBeInTheDocument();
     expect(screen.getByText("P: 35g | C: 45g | G: 12g")).toBeInTheDocument();
     expect(screen.getByText("grelhado saudável")).toBeInTheDocument();
 
     // Should render food items
     expect(screen.getByText("Peito de Frango Grelhado")).toBeInTheDocument();
     expect(screen.getByText("Arroz Integral Cozido")).toBeInTheDocument();
-    expect(screen.getByText("Azeite de Oliva Extra Virgem")).toBeInTheDocument();
+    expect(
+      screen.getByText("Azeite de Oliva Extra Virgem"),
+    ).toBeInTheDocument();
 
     // Should render portion sizes
     expect(screen.getByText("100g")).toBeInTheDocument();
@@ -101,14 +104,14 @@ describe("MealOptionTable Component", () => {
         mainOption={mockMainOption}
         alternatives={[]}
         accentColor="sage"
-      />
+      />,
     );
 
     // Warning symbol should be visible
     expect(screen.getByText("⚠️")).toBeInTheDocument();
-    
+
     // Clinical note text should render
-    expect(screen.getByText("💡 Nota Clínica:")).toBeInTheDocument();
+    expect(screen.getByText("Clinical Note:")).toBeInTheDocument();
     expect(screen.getByText("Sódio elevado")).toBeInTheDocument();
   });
 
@@ -118,23 +121,25 @@ describe("MealOptionTable Component", () => {
         mainOption={mockMainOption}
         alternatives={mockAlternatives}
         accentColor="sage"
-      />
+      />,
     );
 
     // Alternative button is visible
-    const alternativeButton = screen.getByText("Ver 1 alternativa");
+    const alternativeButton = screen.getByText("View 1 alternative");
     expect(alternativeButton).toBeInTheDocument();
 
     // Alternative content should not be visible initially
-    expect(screen.queryByText("Alternativa 1")).not.toBeInTheDocument();
-    expect(screen.queryByText("Patinho Moído Grelhado")).not.toBeInTheDocument();
+    expect(screen.queryByText("Alternative 1")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Patinho Moído Grelhado"),
+    ).not.toBeInTheDocument();
 
     // Click the button to expand alternatives
     fireEvent.click(alternativeButton);
 
     // Alternative content should now be rendered
-    expect(screen.getByText("Ocultar alternativa")).toBeInTheDocument();
-    expect(screen.getByText("Alternativa 1")).toBeInTheDocument();
+    expect(screen.getByText("Hide 1 alternative")).toBeInTheDocument();
+    expect(screen.getByText("Alternative 1")).toBeInTheDocument();
     expect(screen.getByText("Patinho Moído Grelhado")).toBeInTheDocument();
   });
 
@@ -153,7 +158,7 @@ describe("MealOptionTable Component", () => {
         mainOption={legacyMainOption}
         alternatives={[]}
         accentColor="sage"
-      />
+      />,
     );
 
     // It should render foods and portions using fallback logic

@@ -28,16 +28,21 @@ describe("metabolicCalculations", () => {
               bmi_obesity_2: "Obesidade Grau II",
               bmi_obesity_3: "Obesidade Grau III",
               time_to_goal_maintenance: "Manutenção de peso.",
-              time_to_goal_inconsistent: "Meta calórica inconsistente com o objetivo de peso.",
+              time_to_goal_inconsistent:
+                "Meta calórica inconsistente com o objetivo de peso.",
               time_to_goal_weeks: "~{{weeks}} semanas",
-              validate_calories_low: "Alerta: Calorias diárias abaixo do mínimo seguro (800 kcal).",
-              validate_calories_high: "Alerta: Calorias diárias muito elevadas (> 5000 kcal).",
-              validate_protein_low: "Alerta: Proteína abaixo do mínimo recomendado (0.8g/kg). Atual: {{current}}g/kg",
-              validate_protein_high: "Alerta: Proteína acima do limite seguro (2.5g/kg). Atual: {{current}}g/kg",
-            }
-          }
-        }
-      }
+              validate_calories_low:
+                "Alerta: Calorias diárias abaixo do mínimo seguro (800 kcal).",
+              validate_calories_high:
+                "Alerta: Calorias diárias muito elevadas (> 5000 kcal).",
+              validate_protein_low:
+                "Alerta: Proteína abaixo do mínimo recomendado (0.8g/kg). Atual: {{current}}g/kg",
+              validate_protein_high:
+                "Alerta: Proteína acima do limite seguro (2.5g/kg). Atual: {{current}}g/kg",
+            },
+          },
+        },
+      },
     });
   });
   describe("calculateBMR", () => {
@@ -186,7 +191,9 @@ describe("metabolicCalculations", () => {
 
   describe("estimateTimeToGoal", () => {
     it("should return maintenance text if difference is small", () => {
-      expect(estimateTimeToGoal(80, 80, 2000, 2050)).toBe("Manutenção de peso.");
+      expect(estimateTimeToGoal(80, 80, 2000, 2050)).toBe(
+        "Manutenção de peso.",
+      );
     });
 
     it("should warn about inconsistent goals", () => {

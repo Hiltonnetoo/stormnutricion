@@ -29,7 +29,7 @@ export interface SelfEvaluation {
 }
 
 /**
- * Representa um paciente cadastrado no sistema.
+ * Represents a patient registered in the system.
  */
 export interface Patient {
   id?: string;

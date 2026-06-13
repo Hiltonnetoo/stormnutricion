@@ -1,10 +1,15 @@
 name: CI Pipeline
 
+# NOTE: To actually BLOCK merges on failure, enable branch protection on GitHub:
+# Settings → Branches → Add rule for `main` → "Require status checks to pass
+# before merging" and select the "Build and Test" and "Firestore Rules" checks.
+# The jobs below fail the run automatically if any step exits non-zero.
+
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
 
 jobs:
   validate:
@@ -19,7 +24,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install Dependencies
         run: npm ci
@@ -33,8 +38,19 @@ jobs:
       - name: Run TypeScript Type Check
         run: npm run type-check
 
-      - name: Run Unit & Component Tests (Vitest)
-        run: npm run test
+      - name: Build Production Bundle
+        run: npm run build
+
+      - name: Run Unit & Component Tests with Coverage (Vitest)
+        run: npm run test:coverage
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 30
 
       - name: Install Playwright Browsers
         run: npx playwright install chromium --with-deps
@@ -49,3 +65,33 @@ jobs:
           name: playwright-report
           path: test-results/
           retention-days: 30
+
+  firestore-rules:
+    name: Firestore Rules
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      # The Firestore emulator runs on the JVM.
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      - name: Run Firestore Security Rules Tests (emulator)
+        run: npm run test:rules

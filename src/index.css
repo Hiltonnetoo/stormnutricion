@@ -29,27 +29,31 @@
   --color-sage-950: #042f2e;
 
   /* Secondary accent — Sky (ação clínica / gerador) */
-  --color-accent: #0284c7;        /* sky-600 — valor efetivamente usado nos botões */
-  --color-accent-hover: #0369a1;  /* sky-700 */
+  --color-accent: #0284c7; /* sky-600 — valor efetivamente usado nos botões */
+  --color-accent-hover: #0369a1; /* sky-700 */
 
   /* Tokens semânticos de estado */
-  --color-success: #059669;       /* emerald-600 */
-  --color-success-bg: #d1fae5;    /* emerald-100 */
-  --color-warning: #d97706;       /* amber-600 */
-  --color-warning-bg: #fef3c7;    /* amber-100 */
-  --color-danger: #e11d48;        /* rose-600 */
-  --color-danger-bg: #ffe4e6;     /* rose-100 */
-  --color-info: #0284c7;          /* sky-600 */
-  --color-info-bg: #e0f2fe;       /* sky-100 */
+  --color-success: #059669; /* emerald-600 */
+  --color-success-bg: #d1fae5; /* emerald-100 */
+  --color-warning: #d97706; /* amber-600 */
+  --color-warning-bg: #fef3c7; /* amber-100 */
+  --color-danger: #e11d48; /* rose-600 */
+  --color-danger-bg: #ffe4e6; /* rose-100 */
+  --color-info: #0284c7; /* sky-600 */
+  --color-info-bg: #e0f2fe; /* sky-100 */
 
   --color-slate-850: #1e293b;
   --color-slate-900: #0f172a;
 
   /* Elevation — soft, layered, modern */
   --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
-  --shadow-soft: 0 1px 3px rgba(15, 23, 42, 0.04), 0 8px 24px -8px rgba(15, 23, 42, 0.08);
-  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 32px -12px rgba(15, 23, 42, 0.10);
-  --shadow-pop: 0 4px 6px -2px rgba(15, 23, 42, 0.05), 0 24px 48px -12px rgba(15, 23, 42, 0.18);
+  --shadow-soft:
+    0 1px 3px rgba(15, 23, 42, 0.04), 0 8px 24px -8px rgba(15, 23, 42, 0.08);
+  --shadow-card:
+    0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 32px -12px rgba(15, 23, 42, 0.1);
+  --shadow-pop:
+    0 4px 6px -2px rgba(15, 23, 42, 0.05),
+    0 24px 48px -12px rgba(15, 23, 42, 0.18);
   --shadow-glow: 0 8px 24px -6px rgba(13, 148, 136, 0.35);
 
   /* Easing */
@@ -90,7 +94,10 @@ button {
   font-family: inherit;
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   letter-spacing: -0.02em;
 }
 
@@ -140,56 +147,131 @@ h1, h2, h3, h4 {
    MOTION
    ========================================================================== */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.96); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 @keyframes slideInRight {
-  from { opacity: 0; transform: translateX(24px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 @keyframes pulse-soft {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.55; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
 }
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
-.animate-fade-in { animation: fadeIn 0.4s var(--ease-out-smooth) forwards; }
-.animate-fade-in-up { animation: fadeInUp 0.5s var(--ease-out-smooth) forwards; }
-.animate-fade-in-down { animation: fadeInDown 0.35s var(--ease-out-smooth) forwards; }
-.animate-scale-in { animation: scaleIn 0.32s var(--ease-spring) forwards; }
-.animate-slide-in-right { animation: slideInRight 0.45s var(--ease-out-smooth) forwards; }
-.animate-pulse-soft { animation: pulse-soft 2.2s ease-in-out infinite; }
-.animate-float { animation: float 5s ease-in-out infinite; }
+.animate-fade-in {
+  animation: fadeIn 0.4s var(--ease-out-smooth) forwards;
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s var(--ease-out-smooth) forwards;
+}
+.animate-fade-in-down {
+  animation: fadeInDown 0.35s var(--ease-out-smooth) forwards;
+}
+.animate-scale-in {
+  animation: scaleIn 0.32s var(--ease-spring) forwards;
+}
+.animate-slide-in-right {
+  animation: slideInRight 0.45s var(--ease-out-smooth) forwards;
+}
+.animate-pulse-soft {
+  animation: pulse-soft 2.2s ease-in-out infinite;
+}
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
 
 /* Stagger helpers */
-.stagger > * { opacity: 0; animation: fadeInUp 0.5s var(--ease-out-smooth) forwards; }
-.stagger > *:nth-child(1) { animation-delay: 0.04s; }
-.stagger > *:nth-child(2) { animation-delay: 0.10s; }
-.stagger > *:nth-child(3) { animation-delay: 0.16s; }
-.stagger > *:nth-child(4) { animation-delay: 0.22s; }
-.stagger > *:nth-child(5) { animation-delay: 0.28s; }
-.stagger > *:nth-child(6) { animation-delay: 0.34s; }
-.stagger > *:nth-child(7) { animation-delay: 0.40s; }
-.stagger > *:nth-child(8) { animation-delay: 0.46s; }
+.stagger > * {
+  opacity: 0;
+  animation: fadeInUp 0.5s var(--ease-out-smooth) forwards;
+}
+.stagger > *:nth-child(1) {
+  animation-delay: 0.04s;
+}
+.stagger > *:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.stagger > *:nth-child(3) {
+  animation-delay: 0.16s;
+}
+.stagger > *:nth-child(4) {
+  animation-delay: 0.22s;
+}
+.stagger > *:nth-child(5) {
+  animation-delay: 0.28s;
+}
+.stagger > *:nth-child(6) {
+  animation-delay: 0.34s;
+}
+.stagger > *:nth-child(7) {
+  animation-delay: 0.4s;
+}
+.stagger > *:nth-child(8) {
+  animation-delay: 0.46s;
+}
 
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -220,7 +302,9 @@ h1, h2, h3, h4 {
 }
 
 .hover-lift {
-  transition: transform 0.25s var(--ease-out-smooth), box-shadow 0.25s var(--ease-out-smooth);
+  transition:
+    transform 0.25s var(--ease-out-smooth),
+    box-shadow 0.25s var(--ease-out-smooth);
 }
 .hover-lift:hover {
   transform: translateY(-3px);
@@ -272,9 +356,15 @@ h1, h2, h3, h4 {
   @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
   @apply disabled:opacity-50 disabled:pointer-events-none active:scale-[0.97];
 }
-.btn-sm { @apply text-sm px-3.5 py-2 rounded-lg gap-1.5; }
-.btn-md { @apply text-sm px-5 py-2.5; }
-.btn-lg { @apply text-base px-7 py-3.5 rounded-2xl; }
+.btn-sm {
+  @apply text-sm px-3.5 py-2 rounded-lg gap-1.5;
+}
+.btn-md {
+  @apply text-sm px-5 py-2.5;
+}
+.btn-lg {
+  @apply text-base px-7 py-3.5 rounded-2xl;
+}
 
 .btn-primary {
   @apply inline-flex items-center justify-center gap-2 font-semibold rounded-xl px-5 py-2.5;
@@ -339,12 +429,24 @@ h1, h2, h3, h4 {
 .badge {
   @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold;
 }
-.badge-sage { @apply bg-sage-50 text-sage-700 dark:bg-sage-500/15 dark:text-sage-300; }
-.badge-sky { @apply bg-sky-50 text-sky-700 dark:bg-sky-500/15 dark:text-sky-300; }
-.badge-amber { @apply bg-amber-50 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300; }
-.badge-rose { @apply bg-rose-50 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300; }
-.badge-slate { @apply bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300; }
-.badge-emerald { @apply bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300; }
+.badge-sage {
+  @apply bg-sage-50 text-sage-700 dark:bg-sage-500/15 dark:text-sage-300;
+}
+.badge-sky {
+  @apply bg-sky-50 text-sky-700 dark:bg-sky-500/15 dark:text-sky-300;
+}
+.badge-amber {
+  @apply bg-amber-50 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300;
+}
+.badge-rose {
+  @apply bg-rose-50 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300;
+}
+.badge-slate {
+  @apply bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300;
+}
+.badge-emerald {
+  @apply bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300;
+}
 
 /* Section eyebrow label */
 .eyebrow {

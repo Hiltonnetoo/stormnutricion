@@ -32,7 +32,11 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ onMenu }) => {
       crumbs.push({ to, nameKey: routeNameMap[to], defaultName: "" });
     } else if (pathnames[index - 1] === "patients") {
       // dynamic /patients/:id
-      crumbs.push({ to, nameKey: "nav.patient_profile", defaultName: "Perfil do Paciente" });
+      crumbs.push({
+        to,
+        nameKey: "nav.patient_profile",
+        defaultName: "Perfil do Paciente",
+      });
     }
   });
 
@@ -45,8 +49,18 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ onMenu }) => {
             className="lg:hidden -ml-1 p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             aria-label="Abrir menu"
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
             </svg>
           </button>
         )}
@@ -61,7 +75,9 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ onMenu }) => {
                 <span className="p-1.5 rounded-lg bg-slate-100 group-hover:bg-sage-50 transition-colors dark:bg-slate-800">
                   <HomeIcon className="h-4 w-4" />
                 </span>
-                <span className="text-sm font-semibold hidden sm:inline">{t("nav.home", "Início")}</span>
+                <span className="text-sm font-semibold hidden sm:inline">
+                  {t("nav.home", "Início")}
+                </span>
               </Link>
             </li>
             {crumbs.map((c, i) => {

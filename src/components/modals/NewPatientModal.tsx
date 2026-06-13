@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { FirebaseError } from "firebase/app";
+import { useTranslation } from "react-i18next";
 import { addPatient, updatePatient } from "../../services/firebaseService";
 import { useAuth } from "../../contexts/AuthContext";
 import type { Patient } from "../../types";
@@ -77,6 +78,7 @@ const NewPatientModal: React.FC<NewPatientModalProps> = ({
   patient,
   showToast,
 }) => {
+  const { t } = useTranslation();
   const { currentUser } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData, clearFormData] = usePersistentState<
@@ -112,16 +114,16 @@ const NewPatientModal: React.FC<NewPatientModalProps> = ({
     const newErrors: Record<string, string> = {};
     if (currentStep === 1) {
       if (formData.firstName.length < 2)
-        newErrors.firstName = "Nome deve ter no mínimo 2 caracteres.";
+        newErrors.firstName = t("patient_form.personal.err_first_name");
       if (formData.lastName.length < 2)
-        newErrors.lastName = "Sobrenome deve ter no mínimo 2 caracteres.";
+        newErrors.lastName = t("patient_form.personal.err_last_name");
       if (!/^\d{2}\/\d{2}\/\d{4}$/.test(formData.dob)) {
-        newErrors.dob = "Data deve estar no formato DD/MM/AAAA.";
+        newErrors.dob = t("patient_form.personal.err_dob_format");
       } else {
         const [day, month, year] = formData.dob.split("/").map(Number);
         const birthDate = new Date(year, month - 1, day);
         if (isNaN(birthDate.getTime())) {
-          newErrors.dob = "Data de nascimento inválida.";
+          newErrors.dob = t("patient_form.personal.err_dob_invalid");
         } else {
           const today = new Date();
           let age = today.getFullYear() - birthDate.getFullYear();
@@ -129,31 +131,31 @@ const NewPatientModal: React.FC<NewPatientModalProps> = ({
           if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
             age--;
           }
-          if (age < 1) newErrors.dob = "Paciente deve ter no mínimo 1 ano.";
+          if (age < 1) newErrors.dob = t("patient_form.personal.err_dob_age");
         }
       }
     } else if (currentStep === 2) {
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
-        newErrors.email = "Email inválido.";
+        newErrors.email = t("patient_form.contact.err_email");
       if (!/^\(\d{2}\) \d{5}-\d{4}$/.test(formData.phone))
-        newErrors.phone = "Telefone inválido. Formato: (XX) XXXXX-XXXX";
+        newErrors.phone = t("patient_form.contact.err_phone");
       if (formData.address.cep && !/^\d{5}-\d{3}$/.test(formData.address.cep))
-        newErrors.cep = "CEP inválido. Formato: XXXXX-XXX";
+        newErrors.cep = t("patient_form.contact.err_cep");
     } else if (currentStep === 3) {
       if (!formData.profession)
-        newErrors.profession = "Profissão é obrigatória.";
+        newErrors.profession = t("patient_form.professional.err_profession");
     } else if (currentStep === 5) {
       if (formData.weight < 20 || formData.weight > 300)
-        newErrors.weight = "Peso deve ser entre 20kg e 300kg.";
+        newErrors.weight = t("patient_form.anthropometric.err_weight");
       // formData.height is in cm. Range 0.1m to 3.0m is 10cm to 300cm.
       if (formData.height < 10 || formData.height > 300)
-        newErrors.height = "Altura inválida. Use um valor entre 0,10m e 3,00m.";
+        newErrors.height = t("patient_form.anthropometric.err_height");
       if (!formData.termsAccepted)
-        newErrors.termsAccepted = "Você deve aceitar os termos.";
+        newErrors.termsAccepted = t("patient_form.anthropometric.err_terms");
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }, [currentStep, formData]);
+  }, [currentStep, formData, t]);
 
   const nextStep = () => {
     if (validateStep()) {
@@ -230,22 +232,29 @@ const NewPatientModal: React.FC<NewPatientModalProps> = ({
           return JSON.stringify(originalValue) !== JSON.stringify(newValue);
         });
 
-        await updatePatient(currentUser.uid, patient.id, { ...formData, dietNeedsReview: hasRelevantChanges });
+        await updatePatient(currentUser.uid, patient.id, {
+          ...formData,
+          dietNeedsReview: hasRelevantChanges,
+        });
 
         onClose(); // Close modal first
 
         // Then show the toast on the main page
         if (hasRelevantChanges) {
           showToast({
-            title: "Tudo certo!",
-            message:
-              "Dados clínicos (peso, altura, etc.) foram alterados. Vale revisar o plano alimentar do paciente.",
+            title: t("patients.toast_success_title"),
+            message: t("patients.toast_relevant_changes_warning", {
+              defaultValue:
+                "Clinical data (weight, height, etc.) have changed. It is recommended to review the patient's meal plan.",
+            }),
             type: "warning",
           });
         } else {
           showToast({
-            title: "Sucesso!",
-            message: "Paciente atualizado com sucesso!",
+            title: t("patients.toast_success_title"),
+            message: t("patients.toast_update_success", {
+              defaultValue: "Patient updated successfully!",
+            }),
             type: "success",
           });
         }
@@ -259,24 +268,33 @@ const NewPatientModal: React.FC<NewPatientModalProps> = ({
         await addPatient(currentUser.uid, fullPatientData);
         onClose(); // Close modal
         showToast({
-          title: "Sucesso!",
-          message: "Paciente cadastrado com sucesso!",
+          title: t("patients.toast_success_title"),
+          message: t("patients.toast_create_success", {
+            defaultValue: "Patient registered successfully!",
+          }),
           type: "success",
         });
       }
       clearFormData();
     } catch (error) {
       console.error("Failed to save patient:", error);
-      let errorMessage =
-        "Ocorreu um erro ao salvar o paciente. Tente novamente.";
+      let errorMessage = t("patients.error_save_patient", {
+        defaultValue:
+          "An error occurred while saving the patient. Please try again.",
+      });
 
-      if (error instanceof FirebaseError && error.code === "permission-denied") {
-        errorMessage =
-          "Não foi possível salvar. Verifique sua conexão e tente novamente — seus dados foram mantidos.";
+      if (
+        error instanceof FirebaseError &&
+        error.code === "permission-denied"
+      ) {
+        errorMessage = t("patients.error_permission_denied", {
+          defaultValue:
+            "Could not save. Check your connection and try again — your data has been kept.",
+        });
       }
 
       showToast({
-        title: "Erro!",
+        title: t("patients.toast_error_title"),
         message: errorMessage,
         type: "error",
       });
@@ -290,7 +308,10 @@ const NewPatientModal: React.FC<NewPatientModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm animate-fade-in" onClick={handleForceClose} />
+      <div
+        className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm animate-fade-in"
+        onClick={handleForceClose}
+      />
       <div
         className="relative bg-white dark:bg-slate-850 rounded-t-3xl sm:rounded-3xl shadow-pop border border-slate-200/70 dark:border-slate-700/60 w-full max-w-3xl flex flex-col max-h-[95vh] animate-scale-in"
         onClick={(e) => e.stopPropagation()}
@@ -298,14 +319,21 @@ const NewPatientModal: React.FC<NewPatientModalProps> = ({
         <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center shrink-0">
           <div>
             <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-              {isEditMode ? "Editar Paciente" : "Cadastrar Novo Paciente"}
+              {isEditMode
+                ? t("patient_form.edit_patient")
+                : t("patient_form.new_patient")}
             </h2>
-            <p className="text-xs text-slate-400 mt-0.5">Etapa {currentStep} de {TOTAL_STEPS}</p>
+            <p className="text-xs text-slate-400 mt-0.5">
+              {t("patient_form.step_counter", {
+                current: currentStep,
+                total: TOTAL_STEPS,
+              })}
+            </p>
           </div>
           <button
             onClick={handleForceClose}
             className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors dark:hover:bg-slate-800"
-            aria-label="Fechar"
+            aria-label={t("meal_table.close")}
           >
             <CloseIcon className="w-5 h-5" />
           </button>
@@ -371,15 +399,22 @@ const NewPatientModal: React.FC<NewPatientModalProps> = ({
             onClick={prevStep}
             disabled={currentStep === 1}
           >
-            Anterior
+            {t("patient_form.prev_btn")}
           </Button>
           {currentStep < TOTAL_STEPS ? (
             <Button size="sm" onClick={nextStep}>
-              Próximo
+              {t("patient_form.next_btn")}
             </Button>
           ) : (
-            <Button size="sm" onClick={handleSubmit} disabled={isSubmitting} loading={isSubmitting}>
-              {isEditMode ? "Salvar Alterações" : "Finalizar Cadastro"}
+            <Button
+              size="sm"
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+              loading={isSubmitting}
+            >
+              {isEditMode
+                ? t("patient_form.save_changes")
+                : t("patient_form.finish_registration")}
             </Button>
           )}
         </div>
@@ -393,18 +428,17 @@ const NewPatientModal: React.FC<NewPatientModalProps> = ({
           />
           <div className="relative w-full max-w-sm bg-white dark:bg-slate-850 rounded-2xl shadow-pop border border-slate-200 dark:border-slate-700 p-6 animate-scale-in">
             <h3 className="text-base font-bold text-slate-900 dark:text-white">
-              Descartar cadastro?
+              {t("patient_form.discard_title")}
             </h3>
             <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400">
-              Você tem informações preenchidas que ainda não foram salvas. Mantenha um
-              rascunho para continuar depois, ou descarte tudo.
+              {t("patient_form.discard_desc")}
             </p>
             <div className="mt-5 flex justify-end gap-2">
               <Button variant="secondary" size="sm" onClick={keepDraftAndClose}>
-                Manter rascunho
+                {t("patient_form.keep_draft")}
               </Button>
               <Button variant="danger" size="sm" onClick={discardAndClose}>
-                Descartar
+                {t("patient_form.discard_btn")}
               </Button>
             </div>
           </div>

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import type { Patient } from "../../types";
 
 interface Step3Props {
@@ -7,17 +8,29 @@ interface Step3Props {
   errors: Record<string, string>;
 }
 
-const Step3Professional: React.FC<Step3Props> = ({ data, onDataChange, errors }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+const Step3Professional: React.FC<Step3Props> = ({
+  data,
+  onDataChange,
+  errors,
+}) => {
+  const { t } = useTranslation();
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     onDataChange({ [e.target.name]: e.target.value });
   };
 
   return (
     <div className="space-y-5">
-      <h3 className="text-base font-bold text-slate-900 dark:text-white">Dados Profissionais e Atividade Física</h3>
+      <h3 className="text-base font-bold text-slate-900 dark:text-white">
+        {t("patient_form.professional.title")}
+      </h3>
       <div className="space-y-4">
         <div>
-          <label htmlFor="profession" className="input-label">Profissão</label>
+          <label htmlFor="profession" className="input-label">
+            {t("patient_form.professional.profession")}
+          </label>
           <input
             type="text"
             name="profession"
@@ -26,16 +39,36 @@ const Step3Professional: React.FC<Step3Props> = ({ data, onDataChange, errors })
             onChange={handleChange}
             className={`input-field ${errors.profession ? "border-rose-400 focus:ring-rose-500/60 focus:border-rose-400" : ""}`}
           />
-          {errors.profession && <p className="mt-1.5 text-xs font-medium text-rose-600">{errors.profession}</p>}
+          {errors.profession && (
+            <p className="mt-1.5 text-xs font-medium text-rose-600">
+              {errors.profession}
+            </p>
+          )}
         </div>
         <div>
-          <label htmlFor="activityLevel" className="input-label">Nível de Atividade Física (diário)</label>
-          <select id="activityLevel" name="activityLevel" value={data.activityLevel || "moderately_active"} onChange={handleChange} className="input-field">
-            <option value="sedentary">Sedentário (pouco ou nenhum exercício)</option>
-            <option value="lightly_active">Levemente Ativo (exercício leve 1-3 dias/semana)</option>
-            <option value="moderately_active">Moderadamente Ativo (exercício moderado 3-5 dias/semana)</option>
-            <option value="very_active">Muito Ativo (exercício intenso 6-7 dias/semana)</option>
-            <option value="extremely_active">Extremamente Ativo (exercício muito intenso e trabalho físico)</option>
+          <label htmlFor="activityLevel" className="input-label">
+            {t("patient_form.professional.activity_level")}
+          </label>
+          <select
+            id="activityLevel"
+            name="activityLevel"
+            value={data.activityLevel || "moderately_active"}
+            onChange={handleChange}
+            className="input-field"
+          >
+            <option value="sedentary">
+              {t("metabolic.activity_sedentary")}
+            </option>
+            <option value="lightly_active">
+              {t("metabolic.activity_lightly")}
+            </option>
+            <option value="moderately_active">
+              {t("metabolic.activity_moderately")}
+            </option>
+            <option value="very_active">{t("metabolic.activity_very")}</option>
+            <option value="extremely_active">
+              {t("metabolic.activity_extremely")}
+            </option>
           </select>
         </div>
       </div>

@@ -32,10 +32,39 @@ interface MonthBucket {
   count: number;
 }
 
-const buildMonthlyDietBuckets = (diets: AnyDietPlan[], isEn: boolean): MonthBucket[] => {
+const buildMonthlyDietBuckets = (
+  diets: AnyDietPlan[],
+  isEn: boolean,
+): MonthBucket[] => {
   const MONTHS_SHORT = isEn
-    ? ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
-    : ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+    ? [
+        "jan",
+        "feb",
+        "mar",
+        "apr",
+        "may",
+        "jun",
+        "jul",
+        "aug",
+        "sep",
+        "oct",
+        "nov",
+        "dec",
+      ]
+    : [
+        "jan",
+        "fev",
+        "mar",
+        "abr",
+        "mai",
+        "jun",
+        "jul",
+        "ago",
+        "set",
+        "out",
+        "nov",
+        "dez",
+      ];
   const now = new Date();
   const buckets: MonthBucket[] = [];
   const keyToIndex = new Map<string, number>();
@@ -55,12 +84,17 @@ const buildMonthlyDietBuckets = (diets: AnyDietPlan[], isEn: boolean): MonthBuck
   return buckets;
 };
 
-const PerformanceChart: React.FC<{ buckets: MonthBucket[] }> = ({ buckets }) => {
+const PerformanceChart: React.FC<{ buckets: MonthBucket[] }> = ({
+  buckets,
+}) => {
   const max = Math.max(1, ...buckets.map((b) => b.count));
   return (
     <div className="h-48 flex items-end justify-between gap-3 px-2 pt-4">
       {buckets.map((b, i) => (
-        <div key={i} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+        <div
+          key={i}
+          className="flex-1 flex flex-col items-center gap-2 h-full justify-end"
+        >
           <span className="text-xs font-bold text-slate-500 dark:text-slate-300 stat-number">
             {b.count}
           </span>
@@ -69,7 +103,9 @@ const PerformanceChart: React.FC<{ buckets: MonthBucket[] }> = ({ buckets }) => 
             style={{ height: `${(b.count / max) * 100}%` }}
             title={`${b.count} plano(s) em ${b.label}`}
           />
-          <span className="text-[11px] font-semibold text-slate-400 uppercase">{b.label}</span>
+          <span className="text-[11px] font-semibold text-slate-400 uppercase">
+            {b.label}
+          </span>
         </div>
       ))}
     </div>
@@ -100,35 +136,65 @@ interface ActivityItem {
 const formatRelative = (ts: number, isEn: boolean): string => {
   const diffMs = Date.now() - ts;
   const day = 24 * 60 * 60 * 1000;
-  if (diffMs < day && new Date(ts).toDateString() === new Date().toDateString()) return isEn ? "Today" : "Hoje";
+  if (diffMs < day && new Date(ts).toDateString() === new Date().toDateString())
+    return isEn ? "Today" : "Hoje";
   if (diffMs < 2 * day) return isEn ? "Yesterday" : "Ontem";
   if (diffMs < 7 * day) {
     const days = Math.floor(diffMs / day);
     return isEn ? `${days} days ago` : `há ${days} dias`;
   }
-  return new Date(ts).toLocaleDateString(isEn ? "en-US" : "pt-BR", { day: "2-digit", month: "short" });
+  return new Date(ts).toLocaleDateString(isEn ? "en-US" : "pt-BR", {
+    day: "2-digit",
+    month: "short",
+  });
 };
 
-const buildRecentActivity = (patients: Patient[], diets: AnyDietPlan[], t: TFunction, isEn: boolean): ActivityItem[] => {
+const buildRecentActivity = (
+  patients: Patient[],
+  diets: AnyDietPlan[],
+  t: TFunction,
+  isEn: boolean,
+): ActivityItem[] => {
   const items: ActivityItem[] = [];
 
   patients.forEach((p) => {
     const name = `${p.firstName} ${p.lastName}`.trim();
     if (p.createdAt) {
       const ts = new Date(p.createdAt).getTime();
-      if (!isNaN(ts)) items.push({ id: `pat_${p.id}`, iconKey: "patient", text: t("dashboard.activity_registered", { name }), date: ts, label: "" });
+      if (!isNaN(ts))
+        items.push({
+          id: `pat_${p.id}`,
+          iconKey: "patient",
+          text: t("dashboard.activity_registered", { name }),
+          date: ts,
+          label: "",
+        });
     }
     (p.selfEvaluations || [])
       .filter((e) => e.status === "completed" && e.completionDate)
       .forEach((e) => {
         const ts = new Date(e.completionDate!).getTime();
-        if (!isNaN(ts)) items.push({ id: `eval_${e.id}`, iconKey: "eval", text: t("dashboard.activity_evaluation", { name }), date: ts, label: "" });
+        if (!isNaN(ts))
+          items.push({
+            id: `eval_${e.id}`,
+            iconKey: "eval",
+            text: t("dashboard.activity_evaluation", { name }),
+            date: ts,
+            label: "",
+          });
       });
     (p.weightHistory || [])
       .filter((w) => w.origin === "self_reported")
       .forEach((w) => {
         const ts = new Date(w.date).getTime();
-        if (!isNaN(ts)) items.push({ id: `weight_${p.id}_${w.date}`, iconKey: "weight", text: t("dashboard.activity_weight", { name, weight: w.weight }), date: ts, label: "" });
+        if (!isNaN(ts))
+          items.push({
+            id: `weight_${p.id}_${w.date}`,
+            iconKey: "weight",
+            text: t("dashboard.activity_weight", { name, weight: w.weight }),
+            date: ts,
+            label: "",
+          });
       });
   });
 
@@ -136,7 +202,13 @@ const buildRecentActivity = (patients: Patient[], diets: AnyDietPlan[], t: TFunc
     if (!d.createdAt) return;
     const ts = new Date(d.createdAt).getTime();
     if (isNaN(ts)) return;
-    items.push({ id: `diet_${d.id}`, iconKey: "diet", text: t("dashboard.activity_diet", { name: d.patientName }), date: ts, label: "" });
+    items.push({
+      id: `diet_${d.id}`,
+      iconKey: "diet",
+      text: t("dashboard.activity_diet", { name: d.patientName }),
+      date: ts,
+      label: "",
+    });
   });
 
   return items
@@ -167,20 +239,37 @@ const StatCard: React.FC<StatCardProps> = ({
 }) => (
   <Card hover className="p-5 group">
     <div className="flex items-start justify-between mb-4">
-      <div className={`p-3 rounded-xl ${tone.icon} group-hover:scale-110 transition-transform duration-300`}>
-        {React.cloneElement(icon as React.ReactElement<{ className?: string }>, {
-          className: `w-5 h-5 ${tone.text}`,
-        })}
+      <div
+        className={`p-3 rounded-xl ${tone.icon} group-hover:scale-110 transition-transform duration-300`}
+      >
+        {React.cloneElement(
+          icon as React.ReactElement<{ className?: string }>,
+          {
+            className: `w-5 h-5 ${tone.text}`,
+          },
+        )}
       </div>
       {!loading && (
         <span
           className={`inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full ${
-            trendUp ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-500"
+            trendUp
+              ? "bg-emerald-50 text-emerald-600"
+              : "bg-slate-100 text-slate-500"
           }`}
         >
           {trendUp && (
-            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+            <svg
+              className="w-3 h-3"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M5 10l7-7m0 0l7 7m-7-7v18"
+              />
             </svg>
           )}
           {trend}
@@ -211,7 +300,9 @@ const QuickActionCard: React.FC<{
     onClick={onClick}
     className="flex items-center gap-4 p-4 bg-white dark:bg-slate-800/60 rounded-xl border border-slate-200/70 dark:border-slate-700 hover:border-sage-300 hover:shadow-md transition-all group text-left w-full cursor-pointer"
   >
-    <div className={`p-3 rounded-xl ${color} group-hover:scale-110 transition-transform`}>
+    <div
+      className={`p-3 rounded-xl ${color} group-hover:scale-110 transition-transform`}
+    >
       {icon}
     </div>
     <div className="flex-1 min-w-0">
@@ -270,7 +361,10 @@ const Dashboard: React.FC = () => {
     };
   }, [currentUser]);
 
-  const dietBuckets = useMemo(() => buildMonthlyDietBuckets(diets, isEn), [diets, isEn]);
+  const dietBuckets = useMemo(
+    () => buildMonthlyDietBuckets(diets, isEn),
+    [diets, isEn],
+  );
   const hasDietData = dietBuckets.some((b) => b.count > 0);
   const recentActivity = useMemo(
     () => buildRecentActivity(patients, diets, t, isEn),
@@ -296,10 +390,16 @@ const Dashboard: React.FC = () => {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-xl">👋</span>
-            <span className="text-sm font-medium text-slate-500">{greeting()}</span>
+            <span className="text-sm font-medium text-slate-500">
+              {greeting()}
+            </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            {t("dashboard.greeting_nutri", { name: currentUser?.displayName?.split(" ")[0] || t("settings.profile") })}
+            {t("dashboard.greeting_nutri", {
+              name:
+                currentUser?.displayName?.split(" ")[0] ||
+                t("settings.profile"),
+            })}
           </h1>
           <p className="text-slate-500 mt-1">
             {t("dashboard.summary_subtitle")}
@@ -308,7 +408,9 @@ const Dashboard: React.FC = () => {
         <div className="flex items-center gap-3">
           <div className="text-right hidden sm:block">
             <p className="text-sm font-semibold text-slate-600 dark:text-slate-300 capitalize">
-              {new Date().toLocaleDateString(isEn ? "en-US" : "pt-BR", { weekday: "long" })}
+              {new Date().toLocaleDateString(isEn ? "en-US" : "pt-BR", {
+                weekday: "long",
+              })}
             </p>
             <p className="text-xs text-slate-400">
               {new Date().toLocaleDateString(isEn ? "en-US" : "pt-BR", {
@@ -327,7 +429,9 @@ const Dashboard: React.FC = () => {
           title={t("dashboard.total_patients")}
           value={stats.totalPatients.toLocaleString()}
           icon={<UsersIcon />}
-          trend={t("dashboard.new_this_month", { count: stats.newPatientsThisMonth })}
+          trend={t("dashboard.new_this_month", {
+            count: stats.newPatientsThisMonth,
+          })}
           trendUp={stats.newPatientsThisMonth > 0}
           loading={loading}
           tone={{ icon: "bg-sky-50", text: "text-sky-600" }}
@@ -345,7 +449,9 @@ const Dashboard: React.FC = () => {
           title={t("dashboard.created_plans")}
           value={stats.totalDiets.toLocaleString()}
           icon={<UtensilsIcon />}
-          trend={t("dashboard.new_this_month", { count: stats.newDietsThisMonth })}
+          trend={t("dashboard.new_this_month", {
+            count: stats.newDietsThisMonth,
+          })}
           trendUp={stats.newDietsThisMonth > 0}
           loading={loading}
           tone={{ icon: "bg-sage-50", text: "text-sage-600" }}
@@ -370,8 +476,12 @@ const Dashboard: React.FC = () => {
         <div className="lg:col-span-2 space-y-6">
           <Card className="p-6">
             <div className="mb-5">
-              <h2 className="text-lg font-bold text-slate-900 dark:text-white">{t("dashboard.quick_actions")}</h2>
-              <p className="text-sm text-slate-500">{t("dashboard.quick_actions_subtitle")}</p>
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                {t("dashboard.quick_actions")}
+              </h2>
+              <p className="text-sm text-slate-500">
+                {t("dashboard.quick_actions_subtitle")}
+              </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <QuickActionCard
@@ -408,8 +518,12 @@ const Dashboard: React.FC = () => {
           <Card className="p-6">
             <div className="flex items-center justify-between mb-5">
               <div>
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white">{t("dashboard.performance")}</h2>
-                <p className="text-sm text-slate-500">{t("dashboard.performance_subtitle")}</p>
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                  {t("dashboard.performance")}
+                </h2>
+                <p className="text-sm text-slate-500">
+                  {t("dashboard.performance_subtitle")}
+                </p>
               </div>
               <button
                 type="button"
@@ -428,7 +542,9 @@ const Dashboard: React.FC = () => {
                 <div className="p-4 bg-white dark:bg-slate-800 rounded-2xl shadow-sm mb-4 group-hover:scale-110 transition-transform">
                   <BarChart3Icon className="w-8 h-8 text-sage-500" />
                 </div>
-                <p className="font-semibold text-slate-600 dark:text-slate-300">{t("dashboard.performance_empty_title")}</p>
+                <p className="font-semibold text-slate-600 dark:text-slate-300">
+                  {t("dashboard.performance_empty_title")}
+                </p>
                 <p className="text-sm text-slate-400 mt-1">
                   {t("dashboard.performance_empty_desc")}
                 </p>
@@ -440,25 +556,53 @@ const Dashboard: React.FC = () => {
         {/* Right column */}
         <div className="space-y-6">
           <Card className="p-6">
-            <h3 className="font-bold text-slate-900 dark:text-white mb-1">{t("dashboard.month_summary")}</h3>
-            <p className="text-sm text-slate-500 mb-5">{t("dashboard.month_summary_desc")}</p>
+            <h3 className="font-bold text-slate-900 dark:text-white mb-1">
+              {t("dashboard.month_summary")}
+            </h3>
+            <p className="text-sm text-slate-500 mb-5">
+              {t("dashboard.month_summary_desc")}
+            </p>
             <div className="space-y-3">
               {[
-                { label: t("dashboard.summary_new_patients"), value: stats.newPatientsThisMonth, Icon: UsersIcon, color: "text-sky-600 bg-sky-50" },
-                { label: t("dashboard.summary_plans_created"), value: stats.newDietsThisMonth, Icon: UtensilsIcon, color: "text-sage-600 bg-sage-50" },
-                { label: t("dashboard.summary_retention_rate"), value: `${successRate}%`, Icon: TrendingUpIcon, color: "text-emerald-600 bg-emerald-50" },
+                {
+                  label: t("dashboard.summary_new_patients"),
+                  value: stats.newPatientsThisMonth,
+                  Icon: UsersIcon,
+                  color: "text-sky-600 bg-sky-50",
+                },
+                {
+                  label: t("dashboard.summary_plans_created"),
+                  value: stats.newDietsThisMonth,
+                  Icon: UtensilsIcon,
+                  color: "text-sage-600 bg-sage-50",
+                },
+                {
+                  label: t("dashboard.summary_retention_rate"),
+                  value: `${successRate}%`,
+                  Icon: TrendingUpIcon,
+                  color: "text-emerald-600 bg-emerald-50",
+                },
               ].map((item) => (
-                <div key={item.label} className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800">
+                <div
+                  key={item.label}
+                  className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800"
+                >
                   <div className="flex items-center gap-3">
-                    <span className={`w-8 h-8 flex items-center justify-center rounded-lg ${item.color}`}>
+                    <span
+                      className={`w-8 h-8 flex items-center justify-center rounded-lg ${item.color}`}
+                    >
                       <item.Icon className="w-4 h-4" />
                     </span>
-                    <span className="text-sm text-slate-600 dark:text-slate-300">{item.label}</span>
+                    <span className="text-sm text-slate-600 dark:text-slate-300">
+                      {item.label}
+                    </span>
                   </div>
                   {loading ? (
                     <div className="h-5 w-8 bg-slate-200 dark:bg-slate-700 rounded animate-pulse" />
                   ) : (
-                    <span className="font-bold text-slate-800 dark:text-white">{item.value}</span>
+                    <span className="font-bold text-slate-800 dark:text-white">
+                      {item.value}
+                    </span>
                   )}
                 </div>
               ))}
@@ -466,7 +610,9 @@ const Dashboard: React.FC = () => {
           </Card>
 
           <Card className="p-6">
-            <h3 className="font-bold text-slate-900 dark:text-white mb-4">{t("dashboard.recent_activity")}</h3>
+            <h3 className="font-bold text-slate-900 dark:text-white mb-4">
+              {t("dashboard.recent_activity")}
+            </h3>
             {loading ? (
               <div className="space-y-3">
                 {[0, 1, 2].map((i) => (
@@ -494,12 +640,18 @@ const Dashboard: React.FC = () => {
                   const { Icon, tone } = ACTIVITY_ICON[a.iconKey];
                   return (
                     <div key={a.id} className="flex items-start gap-3 py-2">
-                      <span className={`shrink-0 mt-0.5 w-8 h-8 flex items-center justify-center rounded-lg ${tone}`}>
+                      <span
+                        className={`shrink-0 mt-0.5 w-8 h-8 flex items-center justify-center rounded-lg ${tone}`}
+                      >
                         <Icon className="w-4 h-4" />
                       </span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm text-slate-700 dark:text-slate-200 font-medium leading-snug">{a.text}</p>
-                        <p className="text-xs text-slate-400 mt-0.5">{a.label}</p>
+                        <p className="text-sm text-slate-700 dark:text-slate-200 font-medium leading-snug">
+                          {a.text}
+                        </p>
+                        <p className="text-xs text-slate-400 mt-0.5">
+                          {a.label}
+                        </p>
                       </div>
                     </div>
                   );
@@ -515,19 +667,45 @@ const Dashboard: React.FC = () => {
         <div className="mt-8 p-8 rounded-3xl bg-gradient-to-br from-sage-50 to-teal-50 dark:from-sage-900/20 dark:to-teal-900/20 border-2 border-dashed border-sage-200 dark:border-sage-800">
           <div className="max-w-xl mx-auto text-center">
             <div className="text-5xl mb-4">🌱</div>
-            <h2 className="text-xl font-extrabold text-slate-800 dark:text-white mb-2">{t("dashboard.onboarding_title")}</h2>
-            <p className="text-slate-500 mb-8">{t("dashboard.onboarding_desc")}</p>
+            <h2 className="text-xl font-extrabold text-slate-800 dark:text-white mb-2">
+              {t("dashboard.onboarding_title")}
+            </h2>
+            <p className="text-slate-500 mb-8">
+              {t("dashboard.onboarding_desc")}
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-left">
               {[
-                { step: "1", icon: "👤", title: t("dashboard.onboarding_step_1_title"), desc: t("dashboard.onboarding_step_1_desc") },
-                { step: "2", icon: "🥗", title: t("dashboard.onboarding_step_2_title"), desc: t("dashboard.onboarding_step_2_desc") },
-                { step: "3", icon: "📱", title: t("dashboard.onboarding_step_3_title"), desc: t("dashboard.onboarding_step_3_desc") },
+                {
+                  step: "1",
+                  icon: "👤",
+                  title: t("dashboard.onboarding_step_1_title"),
+                  desc: t("dashboard.onboarding_step_1_desc"),
+                },
+                {
+                  step: "2",
+                  icon: "🥗",
+                  title: t("dashboard.onboarding_step_2_title"),
+                  desc: t("dashboard.onboarding_step_2_desc"),
+                },
+                {
+                  step: "3",
+                  icon: "📱",
+                  title: t("dashboard.onboarding_step_3_title"),
+                  desc: t("dashboard.onboarding_step_3_desc"),
+                },
               ].map((s) => (
-                <div key={s.step} className="flex flex-col items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-2xl shadow-soft text-center">
-                  <div className="w-8 h-8 rounded-full bg-sage-600 text-white text-xs font-extrabold flex items-center justify-center shadow-glow">{s.step}</div>
+                <div
+                  key={s.step}
+                  className="flex flex-col items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-2xl shadow-soft text-center"
+                >
+                  <div className="w-8 h-8 rounded-full bg-sage-600 text-white text-xs font-extrabold flex items-center justify-center shadow-glow">
+                    {s.step}
+                  </div>
                   <span className="text-2xl">{s.icon}</span>
                   <div>
-                    <p className="font-bold text-slate-800 dark:text-white text-sm">{s.title}</p>
+                    <p className="font-bold text-slate-800 dark:text-white text-sm">
+                      {s.title}
+                    </p>
                     <p className="text-xs text-slate-400 mt-0.5">{s.desc}</p>
                   </div>
                 </div>

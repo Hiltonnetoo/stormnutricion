@@ -30,7 +30,26 @@ export default defineConfig(({ mode }) => {
         globals: true,
         environment: 'jsdom',
         setupFiles: './src/test/setup.ts',
-        exclude: ['**/node_modules/**', '**/dist/**', '**/tests-e2e/**'],
+        exclude: ['**/node_modules/**', '**/dist/**', '**/tests-e2e/**', '**/tests-rules/**'],
+        coverage: {
+          provider: 'v8',
+          reporter: ['text', 'text-summary', 'html', 'lcov'],
+          reportsDirectory: './coverage',
+          // Focus coverage on the domain logic and components we test; skip
+          // generated data, type-only files, configs and the test scaffolding.
+          include: ['src/**/*.{ts,tsx}'],
+          exclude: [
+            'src/**/*.test.{ts,tsx}',
+            'src/**/__tests__/**',
+            'src/test/**',
+            'src/types/**',
+            'src/data/**',
+            'src/i18n.ts',
+            'src/main.tsx',
+            'src/index.tsx',
+            'src/vite-env.d.ts',
+          ],
+        },
       }
     };
 });

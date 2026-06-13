@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { brazilianFoods } from "../data/foods";
-import { getNovaGroup } from "./foodService";
+import { getNovaGroup, getFoodName } from "./foodService";
 import type {
   Food,
   Meal,
@@ -180,7 +180,7 @@ export const generateAlgorithmicDietPlan = ({
       type: "filter",
       reason,
       affectedCount: removed.length,
-      removedFoods: removed.map((f) => f.name),
+      removedFoods: removed.map(getFoodName),
       tag,
     });
   };
@@ -196,7 +196,7 @@ export const generateAlgorithmicDietPlan = ({
         defaultValue: `Restringindo categorias por tipo de dieta: ${template.avoid.join(", ")}`,
       }),
       affectedCount: removedByDietType.length,
-      removedFoods: removedByDietType.map((f) => f.name),
+      removedFoods: removedByDietType.map(getFoodName),
       tag: mealPlanConfig.dietType,
     });
   }
@@ -207,7 +207,10 @@ export const generateAlgorithmicDietPlan = ({
   // are only available for queries in the foods database, never in auto generation.
   applyExclusion(
     (f) => getNovaGroup(f) !== 4,
-    i18next.t("diet.log_exclude_ultraprocessed", "Excluindo ultraprocessados (NOVA 4) do plano"),
+    i18next.t(
+      "diet.log_exclude_ultraprocessed",
+      "Excluindo ultraprocessados (NOVA 4) do plano",
+    ),
     "nova",
   );
 
@@ -219,7 +222,10 @@ export const generateAlgorithmicDietPlan = ({
         f.category !== "Leite e Derivados" &&
         !f.name.toLowerCase().includes("leite") &&
         !f.name.toLowerCase().includes("queijo"),
-      i18next.t("diet.log_remove_dairy", "Removendo laticínios (Restrição: Sem Lactose)"),
+      i18next.t(
+        "diet.log_remove_dairy",
+        "Removendo laticínios (Restrição: Sem Lactose)",
+      ),
       "lactose_free",
     );
   }
@@ -229,7 +235,10 @@ export const generateAlgorithmicDietPlan = ({
   if (mode === "clinical") {
     applyExclusion(
       (f) => f.sodium < 600,
-      i18next.t("diet.log_clinical_mode", "Limpando banco para Modo Clínico (Sódio < 600mg)"),
+      i18next.t(
+        "diet.log_clinical_mode",
+        "Limpando banco para Modo Clínico (Sódio < 600mg)",
+      ),
       "clinical",
     );
   }
@@ -240,7 +249,10 @@ export const generateAlgorithmicDietPlan = ({
         f.category !== "Bebidas" ||
         f.name.toLowerCase().includes("suco") ||
         f.name.toLowerCase().includes("água"),
-      i18next.t("diet.log_pediatric_mode", "Modo Pediátrico: Restringindo bebidas estimulantes/alcoólicas"),
+      i18next.t(
+        "diet.log_pediatric_mode",
+        "Modo Pediátrico: Restringindo bebidas estimulantes/alcoólicas",
+      ),
       "pediatric",
     );
   }
@@ -250,7 +262,10 @@ export const generateAlgorithmicDietPlan = ({
   if (clinicalTags.includes("hypertension")) {
     applyExclusion(
       (f) => f.sodium < 300,
-      i18next.t("diet.log_hypertension", "Meta Rigorosa de Sódio para Hipertensão (< 300mg)"),
+      i18next.t(
+        "diet.log_hypertension",
+        "Meta Rigorosa de Sódio para Hipertensão (< 300mg)",
+      ),
       "hypertension",
     );
   }
@@ -262,13 +277,19 @@ export const generateAlgorithmicDietPlan = ({
     applyExclusion(
       (f) =>
         f.category !== "Açúcares e Doces" && f.category !== "Industrializados",
-      i18next.t("diet.log_diabetes_sugars", "Controle Glicêmico: Removendo açúcares refinados"),
+      i18next.t(
+        "diet.log_diabetes_sugars",
+        "Controle Glicêmico: Removendo açúcares refinados",
+      ),
       "diabetes",
     );
     // Prioritizes low/medium glycemic index carbohydrates (removes GI >= 70).
     applyExclusion(
       (f) => f.glycemicIndex == null || f.glycemicIndex < 70,
-      i18next.t("diet.log_diabetes_gi", "Controle Glicêmico: Priorizando baixo/médio IG (removendo IG alto ≥ 70)"),
+      i18next.t(
+        "diet.log_diabetes_gi",
+        "Controle Glicêmico: Priorizando baixo/médio IG (removendo IG alto ≥ 70)",
+      ),
       "diabetes_gi",
     );
   }
@@ -276,7 +297,10 @@ export const generateAlgorithmicDietPlan = ({
   if (clinicalTags.includes("renal_ckd")) {
     applyExclusion(
       (f) => f.sodium < 200,
-      i18next.t("diet.log_renal", "Proteção Renal: Sódio ultra-baixo (< 200mg)"),
+      i18next.t(
+        "diet.log_renal",
+        "Proteção Renal: Sódio ultra-baixo (< 200mg)",
+      ),
       "renal_ckd",
     );
   }
@@ -286,7 +310,10 @@ export const generateAlgorithmicDietPlan = ({
       (f) =>
         f.category !== "Óleos e Gorduras" ||
         f.name.toLowerCase().includes("azeite"),
-      i18next.t("diet.log_hepatic", "Esteatose Hepática: Restringindo gorduras saturadas/óleos"),
+      i18next.t(
+        "diet.log_hepatic",
+        "Esteatose Hepática: Restringindo gorduras saturadas/óleos",
+      ),
       "hepatic_steatosis",
     );
   }
@@ -394,25 +421,27 @@ export const generateAlgorithmicDietPlan = ({
           food.category === "Frutas" &&
           stats.carbs > 25
         )
-          warnings.push(i18next.t("diet.warn_moderate_gi", "Carga glicêmica moderada"));
+          warnings.push(
+            i18next.t("diet.warn_moderate_gi", "Carga glicêmica moderada"),
+          );
         return warnings.length > 0 ? warnings : undefined;
       };
 
       const items = [
         {
-          name: proteinSource.name,
+          name: getFoodName(proteinSource),
           portion: `${proteinPortion.toFixed(0)}g`,
           ...pS,
           clinicalWarnings: getWarnings(proteinSource, pS),
         },
         {
-          name: carbSource.name,
+          name: getFoodName(carbSource),
           portion: `${carbPortion.toFixed(0)}g`,
           ...cS,
           clinicalWarnings: getWarnings(carbSource, cS),
         },
         {
-          name: fatSource.name,
+          name: getFoodName(fatSource),
           portion: `${fatPortion.toFixed(0)}g`,
           ...fS,
           clinicalWarnings: getWarnings(fatSource, fS),
@@ -422,7 +451,7 @@ export const generateAlgorithmicDietPlan = ({
       const andStr = i18next.t("diet.and", "e");
 
       return {
-        name: `${proteinSource.name}, ${carbSource.name} ${andStr} ${fatSource.name}`,
+        name: `${getFoodName(proteinSource)}, ${getFoodName(carbSource)} ${andStr} ${getFoodName(fatSource)}`,
         portion: `${proteinPortion.toFixed(0)}g, ${carbPortion.toFixed(0)}g ${andStr} ${fatPortion.toFixed(0)}g`,
         calories: pS.calories + cS.calories + fS.calories,
         protein: pS.protein + cS.protein + fS.protein,
@@ -464,10 +493,25 @@ export const generateAlgorithmicDietPlan = ({
 
 export const getGeneralObservations = (): string[] => {
   return [
-    i18next.t("diet.obs_hydration", "Mantenha-se bem hidratado ao longo do dia."),
-    i18next.t("diet.obs_seasoning", "Prefira temperos naturais como alho, cebola, ervas e especiarias."),
-    i18next.t("diet.obs_sugary_drinks", "Evite o consumo de bebidas açucaradas, como refrigerantes e sucos industrializados."),
-    i18next.t("diet.obs_exercise", "Pratique atividade física regularmente, conforme orientação profissional."),
-    i18next.t("diet.obs_chewing", "Mastigue bem os alimentos e faça suas refeições em um ambiente tranquilo."),
+    i18next.t(
+      "diet.obs_hydration",
+      "Mantenha-se bem hidratado ao longo do dia.",
+    ),
+    i18next.t(
+      "diet.obs_seasoning",
+      "Prefira temperos naturais como alho, cebola, ervas e especiarias.",
+    ),
+    i18next.t(
+      "diet.obs_sugary_drinks",
+      "Evite o consumo de bebidas açucaradas, como refrigerantes e sucos industrializados.",
+    ),
+    i18next.t(
+      "diet.obs_exercise",
+      "Pratique atividade física regularmente, conforme orientação profissional.",
+    ),
+    i18next.t(
+      "diet.obs_chewing",
+      "Mastigue bem os alimentos e faça suas refeições em um ambiente tranquilo.",
+    ),
   ];
 };

@@ -1,17 +1,16 @@
 /**
- * Utilitários de data/hora "ingênuas" (sem fuso) usadas na Agenda.
+ * Naive (timezone-agnostic) date/time utilities used in the Calendar.
  *
- * As consultas são armazenadas como hora de parede de Brasília, ex.:
- * "2026-06-04T14:00:00". O JavaScript interpreta strings SÓ-DATA
- * ("2026-06-04") como UTC, o que provoca desvio de 1 dia quando o sistema é
- * aberto em outro fuso. Estas funções constroem o Date a partir dos componentes
- * explícitos, garantindo que a data/hora exibida seja sempre a mesma que foi
- * registrada, independentemente do fuso do navegador. (correção E1)
+ * Appointments are stored as wall time, e.g.: "2026-06-04T14:00:00".
+ * JavaScript interprets DATE-ONLY strings ("2026-06-04") as UTC, which causes
+ * a 1-day shift when the system is loaded in other timezones. These functions
+ * construct the Date object from explicit components, ensuring that the displayed
+ * date/time is always the same as registered, regardless of the browser's timezone.
  */
 
 /**
- * Converte "YYYY-MM-DDTHH:mm[:ss]" (ou "YYYY-MM-DD") em um Date cujos
- * componentes locais correspondem EXATAMENTE aos da string.
+ * Converts "YYYY-MM-DDTHH:mm[:ss]" (or "YYYY-MM-DD") to a Date whose
+ * local components correspond EXACTLY to those in the string.
  */
 export const parseLocalDateTime = (value: string): Date => {
   if (!value) return new Date(NaN);

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { MealOption, MealOptionItem } from "../types";
 import NutritionLabel from "./diet-generator/NutritionLabel";
 
@@ -9,36 +10,40 @@ interface Props {
   accentColor?: "sage" | "teal";
 }
 
-const NutritionModal: React.FC<{ item: MealOptionItem; onClose: () => void }> = ({
-  item,
-  onClose,
-}) => (
-  <div
-    className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in"
-    onClick={onClose}
-  >
+const NutritionModal: React.FC<{
+  item: MealOptionItem;
+  onClose: () => void;
+}> = ({ item, onClose }) => {
+  const { t } = useTranslation();
+
+  return (
     <div
-      className="bg-white rounded-xl shadow-2xl relative max-h-[90vh] overflow-y-auto transform transition-all animate-scale-in"
-      onClick={(e) => e.stopPropagation()}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in"
+      onClick={onClose}
     >
-      <button
-        onClick={onClose}
-        className="absolute -top-12 right-0 text-white hover:text-gray-200 transition-colors flex items-center gap-2 font-bold"
+      <div
+        className="bg-white rounded-xl shadow-2xl relative max-h-[90vh] overflow-y-auto transform transition-all animate-scale-in"
+        onClick={(e) => e.stopPropagation()}
       >
-        Fechar <span className="text-2xl">×</span>
-      </button>
-      <NutritionLabel
-        name={item.name}
-        portion={item.portion}
-        calories={item.calories}
-        protein={item.protein}
-        carbs={item.carbs}
-        fat={item.fat}
-        micros={item.micros}
-      />
+        <button
+          onClick={onClose}
+          className="absolute -top-12 right-0 text-white hover:text-gray-200 transition-colors flex items-center gap-2 font-bold"
+        >
+          {t("meal_table.close")} <span className="text-2xl">×</span>
+        </button>
+        <NutritionLabel
+          name={item.name}
+          portion={item.portion}
+          calories={item.calories}
+          protein={item.protein}
+          carbs={item.carbs}
+          fat={item.fat}
+          micros={item.micros}
+        />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 /**
  * Splits a combined portion string into individual amounts.
@@ -76,6 +81,7 @@ const OptionTable: React.FC<{
   isAlternative?: boolean;
   index?: number;
 }> = ({ option, accent, isAlternative, index }) => {
+  const { t } = useTranslation();
   const [selectedItem, setSelectedItem] = useState<MealOptionItem | null>(null);
 
   // Use structured items if available (New Plans)
@@ -102,8 +108,8 @@ const OptionTable: React.FC<{
         >
           <span>
             {isAlternative
-              ? `Alternativa ${(index ?? 0) + 1}`
-              : "Opção Principal"}
+              ? t("meal_table.alternative", { index: (index ?? 0) + 1 })
+              : t("meal_table.main_option")}
           </span>
           <div className="flex gap-4">
             {option.protein !== undefined && (
@@ -124,10 +130,10 @@ const OptionTable: React.FC<{
             <thead>
               <tr className="border-b border-slate-100 dark:border-slate-700">
                 <th className="text-left px-3 py-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                  Alimento
+                  {t("meal_table.food")}
                 </th>
                 <th className="text-right px-3 py-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-16">
-                  Porção
+                  {t("meal_table.portion")}
                 </th>
                 <th className="text-center px-2 py-1.5 text-[9px] font-semibold text-slate-400 uppercase w-10">
                   P
@@ -187,7 +193,7 @@ const OptionTable: React.FC<{
                     <button
                       onClick={() => setSelectedItem(item)}
                       className="p-1 hover:bg-slate-200 rounded-md transition-colors text-slate-400 hover:text-slate-600"
-                      title="Ver Tabela Nutricional"
+                      title={t("meal_table.view_nutrition_label")}
                     >
                       <svg
                         className="w-4 h-4"
@@ -212,7 +218,7 @@ const OptionTable: React.FC<{
         {option.clinicalWarnings && option.clinicalWarnings.length > 0 && (
           <div className="px-3 py-1.5 bg-red-50 dark:bg-red-900/20 border-t border-red-100 dark:border-red-800">
             <p className="text-[11px] font-bold text-red-700 dark:text-red-400 flex items-center gap-1 uppercase">
-              <span>💡 Nota Clínica:</span>
+              <span>{t("meal_table.clinical_note")}</span>
               <span className="font-medium normal-case">
                 {option.clinicalWarnings.join(" • ")}
               </span>
@@ -257,8 +263,8 @@ const OptionTable: React.FC<{
       >
         <span>
           {isAlternative
-            ? `Alternativa ${(index ?? 0) + 1}`
-            : "Opção Principal"}
+            ? t("meal_table.alternative", { index: (index ?? 0) + 1 })
+            : t("meal_table.main_option")}
         </span>
         {option.details && (
           <span className="font-normal normal-case text-[11px] italic opacity-80">
@@ -272,10 +278,10 @@ const OptionTable: React.FC<{
           <thead>
             <tr className="border-b border-slate-100 dark:border-slate-700">
               <th className="text-left px-3 py-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-2/3">
-                Alimento
+                {t("meal_table.food")}
               </th>
               <th className="text-right px-3 py-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-1/3">
-                Porção
+                {t("meal_table.portion")}
               </th>
             </tr>
           </thead>
@@ -305,10 +311,10 @@ const OptionTable: React.FC<{
           <thead>
             <tr className="border-b border-slate-100 dark:border-slate-700">
               <th className="text-left px-3 py-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-2/3">
-                Alimento
+                {t("meal_table.food")}
               </th>
               <th className="text-right px-3 py-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-1/3">
-                Porção
+                {t("meal_table.portion")}
               </th>
             </tr>
           </thead>
@@ -348,6 +354,7 @@ const MealOptionTable: React.FC<Props> = ({
   alternatives = [],
   accentColor = "sage",
 }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   return (
@@ -377,8 +384,11 @@ const MealOptionTable: React.FC<Props> = ({
                 d="M9 5l7 7-7 7"
               />
             </svg>
-            {open ? "Ocultar" : `Ver ${alternatives.length}`} alternativa
-            {alternatives.length > 1 ? "s" : ""}
+            {open ? t("meal_table.hide") : t("meal_table.view")}{" "}
+            {alternatives.length}{" "}
+            {alternatives.length === 1
+              ? t("meal_table.alternative_singular")
+              : t("meal_table.alternative_plural")}
           </button>
 
           {open && (
